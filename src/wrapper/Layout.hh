@@ -5,8 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "YGValue.h"
+#pragma once
 
-const YGValue YGValueZero = {0, YGUnitPoint};
-const YGValue YGValueUndefined = {YGUndefined, YGUnitUndefined};
-const YGValue YGValueAuto = {YGUndefined, YGUnitAuto};
+struct Layout {
+  double left;
+  double right;
+
+  double top;
+  double bottom;
+
+  double width;
+  double height;
+};
