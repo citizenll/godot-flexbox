@@ -1,10 +1,63 @@
+
+# Godot-specific ignores
+.import/
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# System/tool-specific ignores
+.directory
+*~
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.db
+# Do not ignore the database that is to be opened in read-only mode!
+!data_to_be_packaged.db
+
+# Compiled source #
+###################
+*.com
+*.class
+*.exe
 *.o
-*.obj
-*.lib
-*.d
-*.pyc
-*.bc
 *.os
-*.gen.cpp
-*.gen.json
+*.obj
+*.exp
+*.pdb
+*.lib
+*.bc
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Etc
+.sconsign.dblite
+demo/build
+test_backup_new.json
+test_backup_base64_new.json
+
+# VS
+vsproj/.vs/
+vsproj/Debug/
+vsproj/Release/
+vsproj/x64/
+vsproj/x86/
+vsproj/gdsqlite.vcxproj.*
+
 .vscode
