@@ -18,17 +18,17 @@ endif
 include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := libgdsqlite
+LOCAL_MODULE := libgdflexbox
 LOCAL_CPPFLAGS := -std=c++14
 LOCAL_CPP_FEATURES := rtti exceptions
 LOCAL_LDLIBS := -llog
 
 LOCAL_SRC_FILES := \
-src/gdsqlite.cpp \
+src/gdflexbox.cpp \
 src/library.cpp \
-src/vfs/gdsqlite_vfs.cpp \
-src/vfs/gdsqlite_file.cpp \
-src/sqlite/sqlite3.c \
+src/wrapper/FConfig.cpp \
+src/wrapper/FNode.cpp \
+src/yoga/Yoga.cpp \
 
 LOCAL_C_INCLUDES := \
 godot-cpp/godot-headers \
