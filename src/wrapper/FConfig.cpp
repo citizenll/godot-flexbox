@@ -7,48 +7,48 @@
 
 #include <yoga/Yoga.h>
 
-#include "./YGConfig.hh"
+#include "./FConfig.hh"
 
-/* static */ YGConfig* YGConfig::create(void) {
-  return new YGConfig();
+/* static */ FConfig* FConfig::create(void) {
+  return new FConfig();
 }
 
-/* static */ void YGConfig::destroy(YGConfig* node) {
+/* static */ void FConfig::destroy(FConfig* node) {
   delete node;
 }
 
-YGConfig::YGConfig(void) : m_config(YGConfigNew()) {}
+FConfig::FConfig(void) : m_config(YGConfigNew()) {}
 
-YGConfig::~YGConfig(void) {
+FConfig::~FConfig(void) {
   YGConfigFree(m_config);
 }
 
-void YGConfig::setExperimentalFeatureEnabled(int feature, bool enabled) {
+void FConfig::setExperimentalFeatureEnabled(int feature, bool enabled) {
   YGConfigSetExperimentalFeatureEnabled(
       m_config, static_cast<YGExperimentalFeature>(feature), enabled);
 }
 
-void YGConfig::setPointScaleFactor(float pixelsInPoint) {
+void FConfig::setPointScaleFactor(float pixelsInPoint) {
   YGConfigSetPointScaleFactor(m_config, pixelsInPoint);
 }
 
-void YGConfig::setUseLegacyStretchBehaviour(bool useLegacyStretchBehaviour) {
+void FConfig::setUseLegacyStretchBehaviour(bool useLegacyStretchBehaviour) {
   YGConfigSetUseLegacyStretchBehaviour(m_config, useLegacyStretchBehaviour);
 }
 
-void YGConfig::setUseWebDefaults(bool useWebDefaults) {
+void FConfig::setUseWebDefaults(bool useWebDefaults) {
   YGConfigSetUseWebDefaults(m_config, useWebDefaults);
 }
 
-bool YGConfig::isExperimentalFeatureEnabled(int feature) const {
+bool FConfig::isExperimentalFeatureEnabled(int feature) const {
   return YGConfigIsExperimentalFeatureEnabled(
       m_config, static_cast<YGExperimentalFeature>(feature));
 }
 
-bool YGConfig::useLegacyStretchBehaviour() {
+bool FConfig::useLegacyStretchBehaviour() {
   return YGConfigGetUseLegacyStretchBehaviour(m_config);
 }
 
-bool YGConfig::useWebDefaults() {
+bool FConfig::useWebDefaults() {
   return YGConfigGetUseWebDefaults(m_config);
 }

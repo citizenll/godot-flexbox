@@ -14,7 +14,7 @@
 #include "./Layout.hh"
 #include "./Size.hh"
 #include "./Value.hh"
-#include "./YGConfig.hh"
+#include "./FConfig.hh"
 
 class MeasureCallback {
 public:
@@ -32,33 +32,33 @@ public:
   virtual void dirtied() = 0;
 };
 
-class YGNode {
+class FNode {
 
 public:
-  static YGNode* createDefault(void);
-  static YGNode* createWithConfig(YGConfig* config);
+  static FNode* createDefault(void);
+  static FNode* createWithConfig(FConfig* config);
 
-  static void destroy(YGNode* node);
+  static void destroy(FNode* node);
 
 public:
-  static YGNode* fromYGNode(YGNodeRef nodeRef);
+  static FNode* fromYGNode(YGNodeRef nodeRef);
 
 private:
-  YGNode(YGConfig* config);
+  FNode(FConfig* config);
 
 public:
-  ~YGNode(void);
+  ~FNode(void);
 
 public: // Prevent accidental copy
-  YGNode(YGNode const&) = delete;
+  FNode(FNode const&) = delete;
 
-  YGNode const& operator=(YGNode const&) = delete;
+  FNode const& operator=(FNode const&) = delete;
 
 public:
   void reset(void);
 
 public: // Style setters
-  void copyStyle(YGNode const& other);
+  void copyStyle(FNode const& other);
 
   void setPositionType(int positionType);
   void setPosition(int edge, double position);
@@ -149,8 +149,8 @@ public: // Style getters
   float getGap(int gutter);
 
 public: // Tree hierarchy mutators
-  void insertChild(YGNode* child, unsigned index);
-  void removeChild(YGNode* child);
+  void insertChild(FNode* child, unsigned index);
+  void removeChild(FNode* child);
 
 public: // Tree hierarchy inspectors
   unsigned getChildCount(void) const;
@@ -158,8 +158,8 @@ public: // Tree hierarchy inspectors
   // The following functions cannot be const because they could discard const
   // qualifiers (ex: constNode->getChild(0)->getParent() wouldn't be const)
 
-  YGNode* getParent(void);
-  YGNode* getChild(unsigned index);
+  FNode* getParent(void);
+  FNode* getChild(unsigned index);
 
 public: // Measure func mutators
   void setMeasureFunc(MeasureCallback* measureFunc);

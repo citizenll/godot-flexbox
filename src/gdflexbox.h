@@ -5,10 +5,7 @@
 #include <Reference.hpp>
 #include <FuncRef.hpp>
 
-#include <wrapper/Size.hh>
-#include <wrapper/Value.hh>
-#include <wrapper/YGConfig.hh>
-#include <wrapper/YGNode.hh>
+#include <wrapper/FNode.hh>
 #include <helpers/current_function.h>
 
 namespace godot
@@ -32,8 +29,8 @@ namespace godot
     {
         GODOT_CLASS(Flexbox, Reference)
     public:
-        YGConfig *m_config;
-        YGNode *m_node;
+        FConfig *m_config;
+        FNode *m_node;
 
     public:
         static void _register_methods();
@@ -50,7 +47,7 @@ namespace godot
             float height,
             int heightMode);
 
-        void insertChild(YGNode* child, unsigned index);
+        void insertChild(FNode* child, unsigned index);
     };
 }
 #endif

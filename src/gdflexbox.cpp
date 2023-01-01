@@ -18,8 +18,8 @@ Flexbox::~Flexbox()
 
 void Flexbox::_init()
 {
-    m_config = YGConfig::create();
-    m_node = YGNode::createWithConfig(m_config);
+    m_config = FConfig::create();
+    m_node = FNode::createWithConfig(m_config);
     m_node->setAlignItems(YGAlignFlexStart);
     m_node->setWidth(100);
     m_node->setHeight(100);
@@ -38,7 +38,7 @@ Size Flexbox::measure(float width, int widthMode, float height, int heightMode)
     return Size(0, 0);
 }
 
-void Flexbox::insertChild(YGNode *child, unsigned index)
+void Flexbox::insertChild(FNode *child, unsigned index)
 {
     GODOT_LOG(0, "Flexbox::insertChild");
     m_node->insertChild(child, index);
