@@ -9,10 +9,10 @@
 
 #include <yoga/Yoga.h>
 
-#include "./Node.hh"
+#include "./YGNode.hh"
 #include "./Layout.hh"
 #include "./Size.hh"
-#include "./Config.hh"
+#include "./YGConfig.hh"
 
 static YGSize globalMeasureFunc(
     YGNodeRef nodeRef,
@@ -20,7 +20,7 @@ static YGSize globalMeasureFunc(
     YGMeasureMode widthMode,
     float height,
     YGMeasureMode heightMode) {
-  Node const& node = *reinterpret_cast<Node const*>(YGNodeGetContext(nodeRef));
+  YGNode const& node = *reinterpret_cast<YGNode const*>(YGNodeGetContext(nodeRef));
 
   Size size = node.callMeasureFunc(width, widthMode, height, heightMode);
   YGSize ygSize = {
@@ -30,28 +30,28 @@ static YGSize globalMeasureFunc(
 }
 
 static void globalDirtiedFunc(YGNodeRef nodeRef) {
-  Node const& node = *reinterpret_cast<Node const*>(YGNodeGetContext(nodeRef));
+  YGNode const& node = *reinterpret_cast<YGNode const*>(YGNodeGetContext(nodeRef));
 
   node.callDirtiedFunc();
 }
 
-/* static */ Node* Node::createDefault(void) {
-  return new Node(nullptr);
+/* static */ YGNode* YGNode::createDefault(void) {
+  return new YGNode(nullptr);
 }
 
-/* static */ Node* Node::createWithConfig(Config* config) {
-  return new Node(config);
+/* static */ YGNode* YGNode::createWithConfig(YGConfig* config) {
+  return new YGNode(config);
 }
 
-/* static */ void Node::destroy(Node* node) {
+/* static */ void YGNode::destroy(YGNode* node) {
   delete node;
 }
 
-/* static */ Node* Node::fromYGNode(YGNodeRef nodeRef) {
-  return reinterpret_cast<Node*>(YGNodeGetContext(nodeRef));
+/* static */ YGNode* YGNode::fromYGNode(YGNodeRef nodeRef) {
+  return reinterpret_cast<YGNode*>(YGNodeGetContext(nodeRef));
 }
 
-Node::Node(Config* config)
+YGNode::YGNode(YGConfig* config)
     : m_node(
           config != nullptr ? YGNodeNewWithConfig(config->m_config)
                             : YGNodeNew()),
@@ -60,328 +60,328 @@ Node::Node(Config* config)
   YGNodeSetContext(m_node, reinterpret_cast<void*>(this));
 }
 
-Node::~Node(void) {
+YGNode::~YGNode(void) {
   YGNodeFree(m_node);
 }
 
-void Node::reset(void) {
+void YGNode::reset(void) {
   m_measureFunc.reset(nullptr);
   m_dirtiedFunc.reset(nullptr);
 
   YGNodeReset(m_node);
 }
 
-void Node::copyStyle(Node const& other) {
+void YGNode::copyStyle(YGNode const& other) {
   YGNodeCopyStyle(m_node, other.m_node);
 }
 
-void Node::setPositionType(int positionType) {
+void YGNode::setPositionType(int positionType) {
   YGNodeStyleSetPositionType(m_node, static_cast<YGPositionType>(positionType));
 }
 
-void Node::setPosition(int edge, double position) {
+void YGNode::setPosition(int edge, double position) {
   YGNodeStyleSetPosition(m_node, static_cast<YGEdge>(edge), position);
 }
 
-void Node::setPositionPercent(int edge, double position) {
+void YGNode::setPositionPercent(int edge, double position) {
   YGNodeStyleSetPositionPercent(m_node, static_cast<YGEdge>(edge), position);
 }
 
-void Node::setAlignContent(int alignContent) {
+void YGNode::setAlignContent(int alignContent) {
   YGNodeStyleSetAlignContent(m_node, static_cast<YGAlign>(alignContent));
 }
 
-void Node::setAlignItems(int alignItems) {
+void YGNode::setAlignItems(int alignItems) {
   YGNodeStyleSetAlignItems(m_node, static_cast<YGAlign>(alignItems));
 }
 
-void Node::setAlignSelf(int alignSelf) {
+void YGNode::setAlignSelf(int alignSelf) {
   YGNodeStyleSetAlignSelf(m_node, static_cast<YGAlign>(alignSelf));
 }
 
-void Node::setFlexDirection(int flexDirection) {
+void YGNode::setFlexDirection(int flexDirection) {
   YGNodeStyleSetFlexDirection(
       m_node, static_cast<YGFlexDirection>(flexDirection));
 }
 
-void Node::setFlexWrap(int flexWrap) {
+void YGNode::setFlexWrap(int flexWrap) {
   YGNodeStyleSetFlexWrap(m_node, static_cast<YGWrap>(flexWrap));
 }
 
-void Node::setJustifyContent(int justifyContent) {
+void YGNode::setJustifyContent(int justifyContent) {
   YGNodeStyleSetJustifyContent(m_node, static_cast<YGJustify>(justifyContent));
 }
 
-void Node::setMargin(int edge, double margin) {
+void YGNode::setMargin(int edge, double margin) {
   YGNodeStyleSetMargin(m_node, static_cast<YGEdge>(edge), margin);
 }
 
-void Node::setMarginPercent(int edge, double margin) {
+void YGNode::setMarginPercent(int edge, double margin) {
   YGNodeStyleSetMarginPercent(m_node, static_cast<YGEdge>(edge), margin);
 }
 
-void Node::setMarginAuto(int edge) {
+void YGNode::setMarginAuto(int edge) {
   YGNodeStyleSetMarginAuto(m_node, static_cast<YGEdge>(edge));
 }
 
-void Node::setOverflow(int overflow) {
+void YGNode::setOverflow(int overflow) {
   YGNodeStyleSetOverflow(m_node, static_cast<YGOverflow>(overflow));
 }
 
-void Node::setDisplay(int display) {
+void YGNode::setDisplay(int display) {
   YGNodeStyleSetDisplay(m_node, static_cast<YGDisplay>(display));
 }
 
-void Node::setFlex(double flex) {
+void YGNode::setFlex(double flex) {
   YGNodeStyleSetFlex(m_node, flex);
 }
 
-void Node::setFlexBasis(double flexBasis) {
+void YGNode::setFlexBasis(double flexBasis) {
   YGNodeStyleSetFlexBasis(m_node, flexBasis);
 }
 
-void Node::setFlexBasisPercent(double flexBasis) {
+void YGNode::setFlexBasisPercent(double flexBasis) {
   YGNodeStyleSetFlexBasisPercent(m_node, flexBasis);
 }
 
-void Node::setFlexBasisAuto() {
+void YGNode::setFlexBasisAuto() {
   YGNodeStyleSetFlexBasisAuto(m_node);
 }
 
-void Node::setFlexGrow(double flexGrow) {
+void YGNode::setFlexGrow(double flexGrow) {
   YGNodeStyleSetFlexGrow(m_node, flexGrow);
 }
 
-void Node::setFlexShrink(double flexShrink) {
+void YGNode::setFlexShrink(double flexShrink) {
   YGNodeStyleSetFlexShrink(m_node, flexShrink);
 }
 
-void Node::setWidth(double width) {
+void YGNode::setWidth(double width) {
   YGNodeStyleSetWidth(m_node, width);
 }
 
-void Node::setWidthPercent(double width) {
+void YGNode::setWidthPercent(double width) {
   YGNodeStyleSetWidthPercent(m_node, width);
 }
 
-void Node::setWidthAuto() {
+void YGNode::setWidthAuto() {
   YGNodeStyleSetWidthAuto(m_node);
 }
 
-void Node::setHeight(double height) {
+void YGNode::setHeight(double height) {
   YGNodeStyleSetHeight(m_node, height);
 }
 
-void Node::setHeightPercent(double height) {
+void YGNode::setHeightPercent(double height) {
   YGNodeStyleSetHeightPercent(m_node, height);
 }
 
-void Node::setHeightAuto() {
+void YGNode::setHeightAuto() {
   YGNodeStyleSetHeightAuto(m_node);
 }
 
-void Node::setMinWidth(double minWidth) {
+void YGNode::setMinWidth(double minWidth) {
   YGNodeStyleSetMinWidth(m_node, minWidth);
 }
 
-void Node::setMinWidthPercent(double minWidth) {
+void YGNode::setMinWidthPercent(double minWidth) {
   YGNodeStyleSetMinWidthPercent(m_node, minWidth);
 }
 
-void Node::setMinHeight(double minHeight) {
+void YGNode::setMinHeight(double minHeight) {
   YGNodeStyleSetMinHeight(m_node, minHeight);
 }
 
-void Node::setMinHeightPercent(double minHeight) {
+void YGNode::setMinHeightPercent(double minHeight) {
   YGNodeStyleSetMinHeightPercent(m_node, minHeight);
 }
 
-void Node::setMaxWidth(double maxWidth) {
+void YGNode::setMaxWidth(double maxWidth) {
   YGNodeStyleSetMaxWidth(m_node, maxWidth);
 }
 
-void Node::setMaxWidthPercent(double maxWidth) {
+void YGNode::setMaxWidthPercent(double maxWidth) {
   YGNodeStyleSetMaxWidthPercent(m_node, maxWidth);
 }
 
-void Node::setMaxHeight(double maxHeight) {
+void YGNode::setMaxHeight(double maxHeight) {
   YGNodeStyleSetMaxHeight(m_node, maxHeight);
 }
 
-void Node::setMaxHeightPercent(double maxHeight) {
+void YGNode::setMaxHeightPercent(double maxHeight) {
   YGNodeStyleSetMaxHeightPercent(m_node, maxHeight);
 }
 
-void Node::setAspectRatio(double aspectRatio) {
+void YGNode::setAspectRatio(double aspectRatio) {
   YGNodeStyleSetAspectRatio(m_node, aspectRatio);
 }
 
-void Node::setBorder(int edge, double border) {
+void YGNode::setBorder(int edge, double border) {
   YGNodeStyleSetBorder(m_node, static_cast<YGEdge>(edge), border);
 }
 
-void Node::setPadding(int edge, double padding) {
+void YGNode::setPadding(int edge, double padding) {
   YGNodeStyleSetPadding(m_node, static_cast<YGEdge>(edge), padding);
 }
 
-void Node::setPaddingPercent(int edge, double padding) {
+void YGNode::setPaddingPercent(int edge, double padding) {
   YGNodeStyleSetPaddingPercent(m_node, static_cast<YGEdge>(edge), padding);
 }
 
-void Node::setIsReferenceBaseline(bool isReferenceBaseline) {
+void YGNode::setIsReferenceBaseline(bool isReferenceBaseline) {
   YGNodeSetIsReferenceBaseline(m_node, isReferenceBaseline);
 }
 
-void Node::setGap(int gutter, double gapLength) {
+void YGNode::setGap(int gutter, double gapLength) {
   YGNodeStyleSetGap(m_node, static_cast<YGGutter>(gutter), gapLength);
 }
 
-int Node::getPositionType(void) const {
+int YGNode::getPositionType(void) const {
   return YGNodeStyleGetPositionType(m_node);
 }
 
-Value Node::getPosition(int edge) const {
+Value YGNode::getPosition(int edge) const {
   return Value::fromYGValue(
       YGNodeStyleGetPosition(m_node, static_cast<YGEdge>(edge)));
 }
 
-int Node::getAlignContent(void) const {
+int YGNode::getAlignContent(void) const {
   return YGNodeStyleGetAlignContent(m_node);
 }
 
-int Node::getAlignItems(void) const {
+int YGNode::getAlignItems(void) const {
   return YGNodeStyleGetAlignItems(m_node);
 }
 
-int Node::getAlignSelf(void) const {
+int YGNode::getAlignSelf(void) const {
   return YGNodeStyleGetAlignSelf(m_node);
 }
 
-int Node::getFlexDirection(void) const {
+int YGNode::getFlexDirection(void) const {
   return YGNodeStyleGetFlexDirection(m_node);
 }
 
-int Node::getFlexWrap(void) const {
+int YGNode::getFlexWrap(void) const {
   return YGNodeStyleGetFlexWrap(m_node);
 }
 
-int Node::getJustifyContent(void) const {
+int YGNode::getJustifyContent(void) const {
   return YGNodeStyleGetJustifyContent(m_node);
 }
 
-Value Node::getMargin(int edge) const {
+Value YGNode::getMargin(int edge) const {
   return Value::fromYGValue(
       YGNodeStyleGetMargin(m_node, static_cast<YGEdge>(edge)));
 }
 
-int Node::getOverflow(void) const {
+int YGNode::getOverflow(void) const {
   return YGNodeStyleGetOverflow(m_node);
 }
 
-int Node::getDisplay(void) const {
+int YGNode::getDisplay(void) const {
   return YGNodeStyleGetDisplay(m_node);
 }
 
-Value Node::getFlexBasis(void) const {
+Value YGNode::getFlexBasis(void) const {
   return Value::fromYGValue(YGNodeStyleGetFlexBasis(m_node));
 }
 
-double Node::getFlexGrow(void) const {
+double YGNode::getFlexGrow(void) const {
   return YGNodeStyleGetFlexGrow(m_node);
 }
 
-double Node::getFlexShrink(void) const {
+double YGNode::getFlexShrink(void) const {
   return YGNodeStyleGetFlexShrink(m_node);
 }
 
-Value Node::getWidth(void) const {
+Value YGNode::getWidth(void) const {
   return Value::fromYGValue(YGNodeStyleGetWidth(m_node));
 }
 
-Value Node::getHeight(void) const {
+Value YGNode::getHeight(void) const {
   return Value::fromYGValue(YGNodeStyleGetHeight(m_node));
 }
 
-Value Node::getMinWidth(void) const {
+Value YGNode::getMinWidth(void) const {
   return Value::fromYGValue(YGNodeStyleGetMinWidth(m_node));
 }
 
-Value Node::getMinHeight(void) const {
+Value YGNode::getMinHeight(void) const {
   return Value::fromYGValue(YGNodeStyleGetMinHeight(m_node));
 }
 
-Value Node::getMaxWidth(void) const {
+Value YGNode::getMaxWidth(void) const {
   return Value::fromYGValue(YGNodeStyleGetMaxWidth(m_node));
 }
 
-Value Node::getMaxHeight(void) const {
+Value YGNode::getMaxHeight(void) const {
   return Value::fromYGValue(YGNodeStyleGetMaxHeight(m_node));
 }
 
-double Node::getAspectRatio(void) const {
+double YGNode::getAspectRatio(void) const {
   return YGNodeStyleGetAspectRatio(m_node);
 }
 
-double Node::getBorder(int edge) const {
+double YGNode::getBorder(int edge) const {
   return YGNodeStyleGetBorder(m_node, static_cast<YGEdge>(edge));
 }
 
-Value Node::getPadding(int edge) const {
+Value YGNode::getPadding(int edge) const {
   return Value::fromYGValue(
       YGNodeStyleGetPadding(m_node, static_cast<YGEdge>(edge)));
 }
 
-float Node::getGap(int gutter) {
+float YGNode::getGap(int gutter) {
   return YGNodeStyleGetGap(m_node, static_cast<YGGutter>(gutter));
 }
 
-bool Node::isReferenceBaseline() {
+bool YGNode::isReferenceBaseline() {
   return YGNodeIsReferenceBaseline(m_node);
 }
 
-void Node::insertChild(Node* child, unsigned index) {
+void YGNode::insertChild(YGNode* child, unsigned index) {
   YGNodeInsertChild(m_node, child->m_node, index);
 }
 
-void Node::removeChild(Node* child) {
+void YGNode::removeChild(YGNode* child) {
   YGNodeRemoveChild(m_node, child->m_node);
 }
 
-unsigned Node::getChildCount(void) const {
+unsigned YGNode::getChildCount(void) const {
   return YGNodeGetChildCount(m_node);
 }
 
-Node* Node::getParent(void) {
+YGNode* YGNode::getParent(void) {
   auto nodePtr = YGNodeGetParent(m_node);
 
   if (nodePtr == nullptr)
     return nullptr;
 
-  return Node::fromYGNode(nodePtr);
+  return YGNode::fromYGNode(nodePtr);
 }
 
-Node* Node::getChild(unsigned index) {
+YGNode* YGNode::getChild(unsigned index) {
   auto nodePtr = YGNodeGetChild(m_node, index);
 
   if (nodePtr == nullptr)
     return nullptr;
 
-  return Node::fromYGNode(nodePtr);
+  return YGNode::fromYGNode(nodePtr);
 }
 
-void Node::setMeasureFunc(MeasureCallback* measureFunc) {
+void YGNode::setMeasureFunc(MeasureCallback* measureFunc) {
   m_measureFunc.reset(measureFunc);
 
   YGNodeSetMeasureFunc(m_node, &globalMeasureFunc);
 }
 
-void Node::unsetMeasureFunc(void) {
+void YGNode::unsetMeasureFunc(void) {
   m_measureFunc.reset(nullptr);
 
   YGNodeSetMeasureFunc(m_node, nullptr);
 }
 
-Size Node::callMeasureFunc(
+Size YGNode::callMeasureFunc(
     double width,
     int widthMode,
     double height,
@@ -389,60 +389,60 @@ Size Node::callMeasureFunc(
   return m_measureFunc->measure(width, widthMode, height, heightMode);
 }
 
-void Node::setDirtiedFunc(DirtiedCallback* dirtiedFunc) {
+void YGNode::setDirtiedFunc(DirtiedCallback* dirtiedFunc) {
   m_dirtiedFunc.reset(dirtiedFunc);
 
   YGNodeSetDirtiedFunc(m_node, &globalDirtiedFunc);
 }
 
-void Node::unsetDirtiedFunc(void) {
+void YGNode::unsetDirtiedFunc(void) {
   m_dirtiedFunc.reset(nullptr);
 
   YGNodeSetDirtiedFunc(m_node, nullptr);
 }
 
-void Node::callDirtiedFunc(void) const {
+void YGNode::callDirtiedFunc(void) const {
   m_dirtiedFunc->dirtied();
 }
 
-void Node::markDirty(void) {
+void YGNode::markDirty(void) {
   YGNodeMarkDirty(m_node);
 }
 
-bool Node::isDirty(void) const {
+bool YGNode::isDirty(void) const {
   return YGNodeIsDirty(m_node);
 }
 
-void Node::calculateLayout(double width, double height, int direction) {
+void YGNode::calculateLayout(double width, double height, int direction) {
   YGNodeCalculateLayout(
       m_node, width, height, static_cast<YGDirection>(direction));
 }
 
-double Node::getComputedLeft(void) const {
+double YGNode::getComputedLeft(void) const {
   return YGNodeLayoutGetLeft(m_node);
 }
 
-double Node::getComputedRight(void) const {
+double YGNode::getComputedRight(void) const {
   return YGNodeLayoutGetRight(m_node);
 }
 
-double Node::getComputedTop(void) const {
+double YGNode::getComputedTop(void) const {
   return YGNodeLayoutGetTop(m_node);
 }
 
-double Node::getComputedBottom(void) const {
+double YGNode::getComputedBottom(void) const {
   return YGNodeLayoutGetBottom(m_node);
 }
 
-double Node::getComputedWidth(void) const {
+double YGNode::getComputedWidth(void) const {
   return YGNodeLayoutGetWidth(m_node);
 }
 
-double Node::getComputedHeight(void) const {
+double YGNode::getComputedHeight(void) const {
   return YGNodeLayoutGetHeight(m_node);
 }
 
-Layout Node::getComputedLayout(void) const {
+Layout YGNode::getComputedLayout(void) const {
   Layout layout;
 
   layout.left = YGNodeLayoutGetLeft(m_node);
@@ -457,14 +457,14 @@ Layout Node::getComputedLayout(void) const {
   return layout;
 }
 
-double Node::getComputedMargin(int edge) const {
+double YGNode::getComputedMargin(int edge) const {
   return YGNodeLayoutGetMargin(m_node, static_cast<YGEdge>(edge));
 }
 
-double Node::getComputedBorder(int edge) const {
+double YGNode::getComputedBorder(int edge) const {
   return YGNodeLayoutGetBorder(m_node, static_cast<YGEdge>(edge));
 }
 
-double Node::getComputedPadding(int edge) const {
+double YGNode::getComputedPadding(int edge) const {
   return YGNodeLayoutGetPadding(m_node, static_cast<YGEdge>(edge));
 }

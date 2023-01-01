@@ -9,25 +9,25 @@
 
 #include <yoga/Yoga.h>
 
-class Config {
+class YGConfig {
 
-  friend class Node;
+  friend class YGNode;
 
 public:
-  static Config* create(void);
+  static YGConfig* create(void);
 
-  static void destroy(Config* config);
+  static void destroy(YGConfig* config);
 
 private:
-  Config(void);
+  YGConfig(void);
 
 public:
-  ~Config(void);
+  ~YGConfig(void);
 
 public: // Prevent accidental copy
-  Config(Config const&) = delete;
+  YGConfig(YGConfig const&) = delete;
 
-  Config const& operator=(Config const&) = delete;
+  YGConfig const& operator=(YGConfig const&) = delete;
 
 public: // Setters
   void setExperimentalFeatureEnabled(int feature, bool enabled);

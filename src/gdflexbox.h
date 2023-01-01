@@ -5,6 +5,10 @@
 #include <Reference.hpp>
 #include <FuncRef.hpp>
 
+#include <wrapper/Size.hh>
+#include <wrapper/Value.hh>
+#include <wrapper/YGConfig.hh>
+#include <wrapper/YGNode.hh>
 #include <helpers/current_function.h>
 
 namespace godot
@@ -24,17 +28,29 @@ namespace godot
         break;                                                                     \
     }
 
-    class Flexbox : public Reference
+    class Flexbox : public Reference, public MeasureCallback, public DirtiedCallback
     {
         GODOT_CLASS(Flexbox, Reference)
+    public:
+        YGConfig *m_config;
+        YGNode *m_node;
 
     public:
         static void _register_methods();
 
         void _init();
+
         Flexbox();
         ~Flexbox();
-    };
 
+        void dirtied();
+        Size measure(
+            float width,
+            int widthMode,
+            float height,
+            int heightMode);
+
+        void insertChild(YGNode* child, unsigned index);
+    };
 }
 #endif
