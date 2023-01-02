@@ -5,7 +5,7 @@
 #include <Reference.hpp>
 #include <FuncRef.hpp>
 
-#include <wrapper/FNode.hh>
+#include <wrapper/FlexNode.hh>
 #include <helpers/current_function.h>
 
 namespace godot
@@ -25,19 +25,15 @@ namespace godot
         break;                                                                     \
     }
 
-    class Flexbox : public Reference, public MeasureCallback, public DirtiedCallback
+    class Flexbox : public Reference, public FlexNode, public MeasureCallback, public DirtiedCallback
     {
         GODOT_CLASS(Flexbox, Reference)
-    public:
-        FConfig *m_config;
-        FNode *m_node;
 
     public:
         static void _register_methods();
 
         void _init();
 
-        Flexbox();
         ~Flexbox();
 
         void dirtied();
@@ -46,8 +42,6 @@ namespace godot
             int widthMode,
             float height,
             int heightMode);
-
-        void insertChild(FNode* child, unsigned index);
     };
 }
 #endif

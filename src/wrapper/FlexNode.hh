@@ -14,7 +14,7 @@
 #include "./Layout.hh"
 #include "./Size.hh"
 #include "./Value.hh"
-#include "./FConfig.hh"
+#include "./FlexConfig.hh"
 
 class MeasureCallback {
 public:
@@ -32,33 +32,33 @@ public:
   virtual void dirtied() = 0;
 };
 
-class FNode {
+class FlexNode {
 
 public:
-  static FNode* createDefault(void);
-  static FNode* createWithConfig(FConfig* config);
+  static FlexNode* createDefault(void);
+  static FlexNode* createWithConfig(FlexConfig* config);
 
-  static void destroy(FNode* node);
+  static void destroy(FlexNode* node);
 
 public:
-  static FNode* fromYGNode(YGNodeRef nodeRef);
+  static FlexNode* fromYGNode(YGNodeRef nodeRef);
 
 private:
-  FNode(FConfig* config);
+  FlexNode(FlexConfig* config);
 
 public:
-  ~FNode(void);
+  ~FlexNode(void);
 
 public: // Prevent accidental copy
-  FNode(FNode const&) = delete;
+  FlexNode(FlexNode const&) = delete;
 
-  FNode const& operator=(FNode const&) = delete;
+  FlexNode const& operator=(FlexNode const&) = delete;
 
 public:
   void reset(void);
 
 public: // Style setters
-  void copyStyle(FNode const& other);
+  void copyStyle(FlexNode const& other);
 
   void setPositionType(int positionType);
   void setPosition(int edge, double position);
@@ -149,8 +149,8 @@ public: // Style getters
   float getGap(int gutter);
 
 public: // Tree hierarchy mutators
-  void insertChild(FNode* child, unsigned index);
-  void removeChild(FNode* child);
+  void insertChild(FlexNode* child, unsigned index);
+  void removeChild(FlexNode* child);
 
 public: // Tree hierarchy inspectors
   unsigned getChildCount(void) const;
@@ -158,8 +158,8 @@ public: // Tree hierarchy inspectors
   // The following functions cannot be const because they could discard const
   // qualifiers (ex: constNode->getChild(0)->getParent() wouldn't be const)
 
-  FNode* getParent(void);
-  FNode* getChild(unsigned index);
+  FlexNode* getParent(void);
+  FlexNode* getChild(unsigned index);
 
 public: // Measure func mutators
   void setMeasureFunc(MeasureCallback* measureFunc);

@@ -9,25 +9,23 @@
 
 #include <yoga/Yoga.h>
 
-class FConfig {
+class FlexConfig {
 
-  friend class FNode;
-
-public:
-  static FConfig* create(void);
-
-  static void destroy(FConfig* config);
-
-private:
-  FConfig(void);
+  friend class FlexNode;
 
 public:
-  ~FConfig(void);
+  static FlexConfig* create(void);
+
+  static void destroy(FlexConfig* config);
+
+public:
+  FlexConfig(void);
+  ~FlexConfig(void);
 
 public: // Prevent accidental copy
-  FConfig(FConfig const&) = delete;
+  FlexConfig(FlexConfig const&) = delete;
 
-  FConfig const& operator=(FConfig const&) = delete;
+  FlexConfig const& operator=(FlexConfig const&) = delete;
 
 public: // Setters
   void setExperimentalFeatureEnabled(int feature, bool enabled);

@@ -26,8 +26,8 @@ LOCAL_LDLIBS := -llog
 LOCAL_SRC_FILES := \
 src/gdflexbox.cpp \
 src/library.cpp \
-src/wrapper/FConfig.cpp \
-src/wrapper/FNode.cpp \
+src/wrapper/FlexConfig.cpp \
+src/wrapper/FlexNode.cpp \
 src/yoga/Yoga.cpp \
 
 LOCAL_C_INCLUDES := \
