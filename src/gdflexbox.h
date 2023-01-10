@@ -57,7 +57,7 @@ namespace godot
         ~Flexbox();
 
     public:
-        void copy_style(Flexbox const &other);
+        void copy_style(Flexbox* other);
         void set_position_type(int positionType);
         void set_position(int edge, double position);
         void set_position_percent(int edge, double position);
@@ -174,14 +174,14 @@ namespace godot
             double width,
             int widthMode,
             double height,
-            int heightMode) const;
+            int heightMode);
 
     public: // Dirtied func mutators
         void set_dirtied_func(Ref<FuncRef> funcRef);
         void unset_dirtied_func(void);
 
     public: // Dirtied func inspectors
-        void call_dirtied_func(void) const;
+        void call_dirtied_func(void);
 
     public: // Dirtiness accessors
         void dirtied();

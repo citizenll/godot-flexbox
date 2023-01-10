@@ -17,7 +17,7 @@ static YGSize globalMeasureFunc(
     float height,
     YGMeasureMode heightMode)
 {
-    Flexbox const &node = *reinterpret_cast<Flexbox const *>(YGNodeGetContext(nodeRef));
+    Flexbox &node = *reinterpret_cast<Flexbox *>(YGNodeGetContext(nodeRef));
 
     Variant size = node.call_measure_func(width, widthMode, height, heightMode);
     Variant w = size["width"];
@@ -28,7 +28,7 @@ static YGSize globalMeasureFunc(
 
 static void globalDirtiedFunc(YGNodeRef nodeRef)
 {
-    Flexbox const &node = *reinterpret_cast<Flexbox const *>(YGNodeGetContext(nodeRef));
+    Flexbox &node = *reinterpret_cast<Flexbox *>(YGNodeGetContext(nodeRef));
 
     node.call_dirtied_func();
 }
@@ -58,9 +58,9 @@ void Flexbox::dirtied()
 {
     delete node;
 }
-void Flexbox::copy_style(Flexbox const &other)
+void Flexbox::copy_style(Flexbox *other)
 {
-    YGNodeCopyStyle(m_node, other.m_node);
+    YGNodeCopyStyle(m_node, other->m_node);
 }
 
 void Flexbox::set_position_type(int positionType)
@@ -524,7 +524,7 @@ Variant Flexbox::call_measure_func(
     double width,
     int widthMode,
     double height,
-    int heightMode) const
+    int heightMode)
 {
     if (!m_measureFunc->is_valid())
     {
@@ -536,12 +536,11 @@ Variant Flexbox::call_measure_func(
     argument_array.append(widthMode);
     argument_array.append(height);
     argument_array.append(heightMode);
-    Ref<FuncRef> func = m_measureFunc;
-    Variant size = func->call_func(argument_array);
+    Variant size = m_measureFunc->call_funcv(argument_array);
     return size;
 }
 //
-void Flexbox::call_dirtied_func(void) const
+void Flexbox::call_dirtied_func(void)
 {
     if (!m_dirtiedFunc->is_valid())
     {
@@ -549,9 +548,7 @@ void Flexbox::call_dirtied_func(void) const
         return;
     }
     Array argument_array = Array();
-    Ref<FuncRef> func = m_dirtiedFunc;
-    Variant size = func->call_func(argument_array);
-    func->call_func(argument_array);
+    m_dirtiedFunc->call_func(argument_array);
 }
 
 void Flexbox::set_dirtied_func(Ref<FuncRef> funcRef)
@@ -593,7 +590,7 @@ void Flexbox::_register_methods()
     GODOT_LOG(0, "Flexbox::_register_methods");
     // register_property<Flexbox, int>("position_type", &Flexbox::set_position_type, &Flexbox::get_position_type, YGPositionTypeStatic);
     // register_method("destroy", &Flexbox::destroy);
-    // register_method("copy_style", &Flexbox::copy_style);
+    register_method("copy_style", &Flexbox::copy_style);
     register_method("set_position_type", &Flexbox::set_position_type);
     register_method("set_position", &Flexbox::set_position);
     register_method("set_position_percent", &Flexbox::set_position_percent);
@@ -677,7 +674,7 @@ void Flexbox::_register_methods()
     register_method("measure", &Flexbox::measure);
     register_method("set_measure_func", &Flexbox::set_measure_func);
     register_method("unset_measure_func", &Flexbox::unset_measure_func);
-    // register_method("set_dirtied_func", &Flexbox::set_dirtied_func);
+    register_method("set_dirtied_func", &Flexbox::set_dirtied_func);
     register_method("unset_dirtied_func", &Flexbox::unset_dirtied_func);
     register_method("mark_dirty", &Flexbox::mark_dirty);
     register_method("is_dirty", &Flexbox::is_dirty);
