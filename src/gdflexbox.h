@@ -2,6 +2,7 @@
 #define GDFLEXBOX_H
 
 #include <memory>
+
 #include <yoga/Yoga.h>
 #include <Godot.hpp>
 #include <Reference.hpp>
@@ -57,7 +58,7 @@ namespace godot
         ~Flexbox();
 
     public:
-        void copy_style(Flexbox* other);
+        void copy_style(Flexbox *other);
         void set_position_type(int positionType);
         void set_position(int edge, double position);
         void set_position_percent(int edge, double position);
@@ -166,10 +167,10 @@ namespace godot
     public: // Measure func mutators
         void set_measure_func(Ref<FuncRef> funcRef);
         void unset_measure_func(void);
-    
+
     public: // Measure func inspectors
-        //YGSize measure(YGNodeRef nodeRef, float width, int widthMode, float height, int heightMode);
-        Variant call_measure_func(
+        // YGSize measure(YGNodeRef nodeRef, float width, int widthMode, float height, int heightMode);
+        Dictionary call_measure_func(
             double width,
             int widthMode,
             double height,

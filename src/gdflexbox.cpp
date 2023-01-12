@@ -19,11 +19,11 @@ static YGSize globalMeasureFunc(
 {
     Flexbox &node = *reinterpret_cast<Flexbox *>(YGNodeGetContext(nodeRef));
 
-    Variant size = node.call_measure_func(width, widthMode, height, heightMode);
+    Dictionary size = node.call_measure_func(width, widthMode, height, heightMode);
     Variant w = size["width"];
     Variant h = size["height"];
     YGSize ygSize = {static_cast<float>(w), static_cast<float>(h)};
-    String info ="width: " + String::num_real(w) + " height: " + String::num_real(h);
+    String info = "[measure] width: " + String::num_real(w) + " height: " + String::num_real(h);
     GODOT_LOG(0, info);
     return ygSize;
 }
@@ -38,14 +38,14 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
 //====================================================
 Flexbox::~Flexbox()
 {
-    GODOT_LOG(0, "Flexbox destructor");
+    // GODOT_LOG(0, "Flexbox destructor");
 }
 
 void Flexbox::_init()
 {
     m_node = YGNodeNew();
     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
-    GODOT_LOG(0, "Flexbox::_init");
+    // GODOT_LOG(0, "Flexbox::_init");
 }
 
 void Flexbox::dirtied()
@@ -523,7 +523,7 @@ void Flexbox::unset_measure_func(void)
     YGNodeSetMeasureFunc(m_node, nullptr);
 }
 
-Variant Flexbox::call_measure_func(
+Dictionary Flexbox::call_measure_func(
     double width,
     int widthMode,
     double height,
@@ -539,7 +539,7 @@ Variant Flexbox::call_measure_func(
     argument_array.append(widthMode);
     argument_array.append(height);
     argument_array.append(heightMode);
-    Variant size =  m_measureFunc->call_funcv(argument_array);
+    Dictionary size = m_measureFunc->call_funcv(argument_array);
     return size;
 }
 //
