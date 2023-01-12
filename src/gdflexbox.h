@@ -44,7 +44,7 @@ namespace godot
         break;                                                                     \
     }
 
-    class Flexbox : public Reference, public MeasureCallback, public DirtiedCallback
+    class Flexbox : public Reference
     {
         GODOT_CLASS(Flexbox, Reference)
 
@@ -106,8 +106,6 @@ namespace godot
         void set_padding_percent(int edge, double padding);
         void set_gap(int gutter, double gapLength);
 
-        Variant measure(float width, int widthMode, float height, int heightMode);
-
     public: // Style getters
         int get_position_type(void) const;
         Variant get_position(int edge) const;
@@ -168,8 +166,9 @@ namespace godot
     public: // Measure func mutators
         void set_measure_func(Ref<FuncRef> funcRef);
         void unset_measure_func(void);
-
+    
     public: // Measure func inspectors
+        //YGSize measure(YGNodeRef nodeRef, float width, int widthMode, float height, int heightMode);
         Variant call_measure_func(
             double width,
             int widthMode,

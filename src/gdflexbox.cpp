@@ -23,6 +23,8 @@ static YGSize globalMeasureFunc(
     Variant w = size["width"];
     Variant h = size["height"];
     YGSize ygSize = {static_cast<float>(w), static_cast<float>(h)};
+    String info ="width: " + String::num_real(w) + " height: " + String::num_real(h);
+    GODOT_LOG(0, info);
     return ygSize;
 }
 
@@ -42,6 +44,7 @@ Flexbox::~Flexbox()
 void Flexbox::_init()
 {
     m_node = YGNodeNew();
+    YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
     GODOT_LOG(0, "Flexbox::_init");
 }
 
@@ -536,7 +539,7 @@ Variant Flexbox::call_measure_func(
     argument_array.append(widthMode);
     argument_array.append(height);
     argument_array.append(heightMode);
-    Variant size = m_measureFunc->call_funcv(argument_array);
+    Variant size =  m_measureFunc->call_funcv(argument_array);
     return size;
 }
 //
@@ -573,14 +576,6 @@ void Flexbox::mark_dirty(void)
 bool Flexbox::is_dirty(void) const
 {
     return YGNodeIsDirty(m_node);
-}
-//
-Variant Flexbox::measure(float width, int widthMode, float height, int heightMode)
-{
-    Dictionary size;
-    size["width"] = width;
-    size["height"] = height;
-    return size;
 }
 
 void Flexbox::_register_methods()
@@ -671,7 +666,6 @@ void Flexbox::_register_methods()
     register_method("get_child_count", &Flexbox::get_child_count);
     register_method("get_child", &Flexbox::get_child);
 
-    register_method("measure", &Flexbox::measure);
     register_method("set_measure_func", &Flexbox::set_measure_func);
     register_method("unset_measure_func", &Flexbox::unset_measure_func);
     register_method("set_dirtied_func", &Flexbox::set_dirtied_func);
