@@ -19,7 +19,7 @@ static YGSize globalMeasureFunc(
 {
     Flexbox &node = *reinterpret_cast<Flexbox *>(YGNodeGetContext(nodeRef));
 
-    Dictionary size = node.call_measure_func(width, widthMode, height, heightMode);
+    Dictionary &size = node.call_measure_func(width, widthMode, height, heightMode);
     Variant w = size["width"];
     Variant h = size["height"];
     YGSize ygSize = {static_cast<float>(w), static_cast<float>(h)};
