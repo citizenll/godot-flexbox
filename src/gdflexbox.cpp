@@ -36,14 +36,129 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
 }
 
 //====================================================
+
+void FlexContainer::_init()
+{
+    root = Ref<Flexbox>(Flexbox::_new());
+
+    root->set_flex_direction(YGFlexDirectionRow);
+    root->set_align_items(YGAlignFlexStart);
+}
+
+void FlexContainer::_register_methods()
+{
+    register_method("_notification", &FlexContainer::_notification);
+}
+
+void FlexContainer::_resort()
+{
+    GODOT_LOG(0, "FlexContainer::_resort");
+    Size2 rect = get_rect().size;
+    root->set_width(rect.x);
+    root->set_height(rect.y);
+    GODOT_LOG(0, "FlexContainer::init rect:" + String::num_real(rect.x) + "," + String::num_real(rect.y));
+    GODOT_LOG(0, "FlexContainer::init root:" + String::num_real(root->get_computed_width()) + "," + String::num_real(root->get_computed_height()));
+
+    // First pass for line wrapping and minimum size calculation.
+    for (int i = 0; i < get_child_count(); i++)
+    {
+        Control *child = Object::cast_to<Control>(get_child(i));
+        if (!child || !child->is_visible())
+        {
+            continue;
+        }
+        if (child->is_set_as_toplevel())
+        {
+            continue;
+        }
+        Size2 child_msc = child->get_combined_minimum_size();
+        int64_t id = child->get_instance_id();
+        // GODOT_LOG(0, "FlexContainer::insert children 0");
+
+        if (!cached_children[id])
+        {
+            Ref<Flexbox> flexbox = Flexbox::_new();
+            // GODOT_LOG(0, "FlexContainer::insert children 1");
+
+            cached_children[id] = flexbox;
+            // GODOT_LOG(0, "FlexContainer::insert children 1.1");
+            double width = static_cast<double>(child_msc.width);
+            double height = static_cast<double>(child_msc.height);
+            flexbox->set_width(width);
+            flexbox->set_height(height);
+            GODOT_LOG(0, "FlexContainer::insert children: " + String::num_real(width) + "," + String::num_real(height));
+            double cw = flexbox->get_computed_width();
+            double ch = flexbox->get_computed_height();
+            GODOT_LOG(0, "FlexContainer::insert childrens: " + String::num_real(cw) + "," + String::num_real(ch));
+            root->insert_child(*flexbox, i);
+            // GODOT_LOG(0, "FlexContainer::insert children 2");
+        }
+    }
+    GODOT_LOG(0, "FlexContainer::insert children count:" + String::num_real(root->get_child_count()));
+    Vector2 ofs;
+    for (int i = 0; i < get_child_count(); i++)
+    {
+        Control *child = Object::cast_to<Control>(get_child(i));
+        if (!child || !child->is_visible())
+        {
+            continue;
+        }
+        if (child->is_set_as_toplevel())
+        {
+            continue;
+        }
+        int64_t id = child->get_instance_id();
+        Flexbox *flexbox = cached_children[id];
+        ofs.x = flexbox->get_computed_left();
+        ofs.y = flexbox->get_computed_top();
+        Size2 child_size = {static_cast<real_t>(flexbox->get_computed_width()), static_cast<real_t>(flexbox->get_computed_height())};
+        Rect2 child_rect = Rect2(ofs, child_size);
+        GODOT_LOG(0, "FlexContainer::fit children" + String::num_real(ofs.x) + "," + String::num_real(ofs.y) + "," + String::num_real(child_size.width) + "," + String::num_real(child_size.height));
+        fit_child_in_rect(child, child_rect);
+    }
+}
+
+void FlexContainer::_notification(int p_what)
+{
+    switch (p_what)
+    {
+    case NOTIFICATION_SORT_CHILDREN:
+    {
+        _resort();
+        minimum_size_changed();
+    }
+    break;
+    case NOTIFICATION_THEME_CHANGED:
+    {
+        minimum_size_changed();
+    }
+    break;
+    case NOTIFICATION_TRANSLATION_CHANGED:
+    {
+        queue_sort();
+    }
+    break;
+    }
+}
+Size2 FlexContainer::get_minimum_size() const
+{
+    Size2 minimum;
+    return minimum;
+}
+//
+Flexbox::Flexbox()
+{
+    // GODOT_LOG(0, "Flexbox constructor");
+    // _init();
+}
 Flexbox::~Flexbox()
 {
-    // GODOT_LOG(0, "Flexbox destructor");
+    GODOT_LOG(0, "Flexbox destructor");
 }
 
 void Flexbox::_init()
 {
-    m_node = YGNodeNew();
+    m_node = YGNodeNewWithConfig(YGConfigGetDefault());
     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
     // GODOT_LOG(0, "Flexbox::_init");
 }

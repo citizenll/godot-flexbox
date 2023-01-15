@@ -4,5 +4,5 @@
 
 [resource]
 resource_name = "gdflexbox"
-class_name = "Flexbox"
+class_name = "FlexContainer"
 library = ExtResource( 1 )

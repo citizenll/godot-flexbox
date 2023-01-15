@@ -7,7 +7,8 @@ tool
 extends EditorPlugin
 
 func _enter_tree():
-	pass
+	add_custom_type("FlexContainer", "Container", preload("res://addons/godot-flexbox/bin/gdflexbox.gdns"), preload("res://addons/godot-flexbox/icon.svg"))
 
 func _exit_tree():
-	pass
+	remove_custom_type("FlexContainer")
+

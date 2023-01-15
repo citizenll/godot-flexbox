@@ -8,7 +8,7 @@
 #include <Reference.hpp>
 #include <FuncRef.hpp>
 #include <Directory.hpp>
-
+#include <Container.hpp>
 #include <helpers/current_function.h>
 
 namespace godot
@@ -55,6 +55,7 @@ namespace godot
         static Flexbox *fromYGNode(YGNodeRef nodeRef);
 
         void _init();
+        Flexbox();
         ~Flexbox();
 
     public:
@@ -198,5 +199,26 @@ namespace godot
         Ref<FuncRef> m_measureFunc;
         Ref<FuncRef> m_dirtiedFunc;
     };
-}
+
+    class FlexContainer : public Container
+    {
+        GODOT_CLASS(FlexContainer, Container)
+
+    public:
+        int cached_size;
+        Ref<Flexbox> root;
+        Dictionary cached_children;
+
+        void _resort();
+        virtual Size2 get_minimum_size() const;
+
+    protected:
+        void _notification(int p_what);
+
+    public:
+        void _init();
+        static void _register_methods();
+    };
+};
+
 #endif
