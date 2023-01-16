@@ -1,6 +1,8 @@
 name: 🌐 Javascript Builds
 on:
   push:
+    tags:
+    - '*'
     branches: [ master, main ]
 
 env:

@@ -218,6 +218,17 @@ namespace godot
     public:
         void _init();
         static void _register_methods();
+
+    public://setters
+        void set_direction(int direction);
+        int get_direction(void) const;
+
+        void set_align_items(int alignItems);
+        int get_align_items(void) const;
+
+        void set_justify_content(int justifyContent);
+        int get_justify_content(void) const;
+
     };
 };
 

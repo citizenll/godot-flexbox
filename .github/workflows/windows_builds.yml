@@ -1,6 +1,8 @@
 name: 🏁 Windows Builds
 on:
   push:
+    tags:
+    - '*'
     branches: [ master, main ]
 
 # Global Settings

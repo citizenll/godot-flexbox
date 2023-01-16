@@ -45,9 +45,79 @@ void FlexContainer::_init()
     root->set_align_items(YGAlignFlexStart);
 }
 
+void FlexContainer::set_direction(int direction)
+{
+    GODOT_LOG(0, "FlexContainer::set_direction");
+    root->set_flex_direction(direction);
+    queue_sort();
+}
+
+int FlexContainer::get_direction() const
+{
+    GODOT_LOG(0, "FlexContainer::get_direction");
+    return root->get_flex_direction();
+}
+
+void FlexContainer::set_align_items(int alignItems)
+{
+    GODOT_LOG(0, "FlexContainer::set_align_items " + String::num_int64(alignItems));
+    root->set_align_items(alignItems);
+    queue_sort();
+}
+
+int FlexContainer::get_align_items() const
+{
+    int align = root->get_align_items();
+    GODOT_LOG(0, "FlexContainer::get_align_items " + String::num_int64(align));
+    return align;
+}
+
+void FlexContainer::set_justify_content(int justifyContent)
+{
+    GODOT_LOG(0, "FlexContainer::set_justify_content " + String::num_int64(justifyContent));
+    root->set_justify_content(justifyContent);
+    queue_sort();
+}
+
+int FlexContainer::get_justify_content() const
+{
+    int justify = root->get_justify_content();
+    GODOT_LOG(0, "FlexContainer::get_justify_content " + String::num_int64(justify));
+    return justify;
+}
+
 void FlexContainer::_register_methods()
 {
     register_method("_notification", &FlexContainer::_notification);
+    register_property<FlexContainer, int>(
+        "flex_direction",
+        &FlexContainer::set_direction,
+        &FlexContainer::get_direction,
+        YGFlexDirectionColumn,
+        GODOT_METHOD_RPC_MODE_DISABLED,
+        GODOT_PROPERTY_USAGE_DEFAULT,
+        GODOT_PROPERTY_HINT_ENUM,
+        "Column,ColumnReverse,Row,RowReverse");
+
+    register_property<FlexContainer, int>(
+        "justify_content",
+        &FlexContainer::set_justify_content,
+        &FlexContainer::get_justify_content,
+        YGJustifyFlexStart,
+        GODOT_METHOD_RPC_MODE_DISABLED,
+        GODOT_PROPERTY_USAGE_DEFAULT,
+        GODOT_PROPERTY_HINT_ENUM,
+        "FlexStart,FlexEnd,Center,SpaceBetween,SpaceAround,SpaceEvenly");
+
+    register_property<FlexContainer, int>(
+        "align_items",
+        &FlexContainer::set_align_items,
+        &FlexContainer::get_align_items,
+        YGAlignAuto,
+        GODOT_METHOD_RPC_MODE_DISABLED,
+        GODOT_PROPERTY_USAGE_DEFAULT,
+        GODOT_PROPERTY_HINT_ENUM,
+        "Auto,Stretch,FlexStart,FlexEnd,Center,Baseline,SpaceBetween,SpaceAround");
 }
 
 void FlexContainer::_resort()
@@ -56,8 +126,10 @@ void FlexContainer::_resort()
     Size2 rect = get_rect().size;
     root->set_width(rect.x);
     root->set_height(rect.y);
-    GODOT_LOG(0, "FlexContainer::init rect:" + String::num_real(rect.x) + "," + String::num_real(rect.y));
-    GODOT_LOG(0, "FlexContainer::init root:" + String::num_real(root->get_computed_width()) + "," + String::num_real(root->get_computed_height()));
+    GODOT_LOG(0, "FlexContainer::init rect:");
+    Godot::print(Variant(rect));
+    GODOT_LOG(0, "FlexContainer::init root:");
+    Godot::print(Variant(root->get_computed_width()));
 
     // First pass for line wrapping and minimum size calculation.
     for (int i = 0; i < get_child_count(); i++)
@@ -89,7 +161,8 @@ void FlexContainer::_resort()
             GODOT_LOG(0, "FlexContainer::insert children: " + String::num_real(width) + "," + String::num_real(height));
             double cw = flexbox->get_computed_width();
             double ch = flexbox->get_computed_height();
-            GODOT_LOG(0, "FlexContainer::insert childrens: " + String::num_real(cw) + "," + String::num_real(ch));
+            Godot::print(Variant(flexbox->get_computed_width()));
+            Godot::print(Variant(flexbox->get_computed_height()));
             root->insert_child(*flexbox, i);
             // GODOT_LOG(0, "FlexContainer::insert children 2");
         }

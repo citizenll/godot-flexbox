@@ -1,6 +1,8 @@
 name: 🐧 Linux Builds
 on:
   push:
+    tags:
+    - '*'
     branches: [ master, main ]
 
 # Global Settings
