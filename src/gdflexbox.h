@@ -205,6 +205,11 @@ namespace godot
         GODOT_CLASS(FlexContainer, Container)
 
     public:
+        FlexContainer();
+        void _init();
+        static void _register_methods();
+
+    public:
         int cached_size;
         Ref<Flexbox> root;
         Dictionary cached_children;
@@ -215,11 +220,7 @@ namespace godot
     protected:
         void _notification(int p_what);
 
-    public:
-        void _init();
-        static void _register_methods();
-
-    public://setters
+    public: // setters
         void set_direction(int direction);
         int get_direction(void) const;
 
@@ -228,7 +229,6 @@ namespace godot
 
         void set_justify_content(int justifyContent);
         int get_justify_content(void) const;
-
     };
 };
 

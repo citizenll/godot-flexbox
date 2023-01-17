@@ -35,55 +35,75 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
     node.call_dirtied_func();
 }
 
+class Test : public Reference
+{
+public:
+    double width;
+    double height;
+    void print()
+    {
+        Godot::print(Variant(width));
+        Godot::print(Variant(height));
+        GODOT_LOG(0, "Test::print" + String::num_real(width) + "," + String::num_real(height));
+    }
+
+    double get_width()
+    {
+        return width;
+    }
+
+    double get_height()
+    {
+        return height;
+    }
+};
+
 //====================================================
+
+FlexContainer::FlexContainer()
+{
+    // GODOT_LOG(0, "FlexContainer::FlexContainer construct");
+}
 
 void FlexContainer::_init()
 {
     root = Ref<Flexbox>(Flexbox::_new());
-
+    // set default direction
     root->set_flex_direction(YGFlexDirectionRow);
     root->set_align_items(YGAlignFlexStart);
 }
 
 void FlexContainer::set_direction(int direction)
 {
-    GODOT_LOG(0, "FlexContainer::set_direction");
     root->set_flex_direction(direction);
-    queue_sort();
+    // queue_sort();
 }
 
 int FlexContainer::get_direction() const
 {
-    GODOT_LOG(0, "FlexContainer::get_direction");
     return root->get_flex_direction();
 }
 
 void FlexContainer::set_align_items(int alignItems)
 {
-    GODOT_LOG(0, "FlexContainer::set_align_items " + String::num_int64(alignItems));
     root->set_align_items(alignItems);
-    queue_sort();
+    // queue_sort();
 }
 
 int FlexContainer::get_align_items() const
 {
-    int align = root->get_align_items();
-    GODOT_LOG(0, "FlexContainer::get_align_items " + String::num_int64(align));
-    return align;
+    return root->get_align_items();
 }
 
 void FlexContainer::set_justify_content(int justifyContent)
 {
-    GODOT_LOG(0, "FlexContainer::set_justify_content " + String::num_int64(justifyContent));
     root->set_justify_content(justifyContent);
-    queue_sort();
+    // queue_sort();
 }
 
 int FlexContainer::get_justify_content() const
 {
-    int justify = root->get_justify_content();
-    GODOT_LOG(0, "FlexContainer::get_justify_content " + String::num_int64(justify));
-    return justify;
+    return root->get_justify_content();
 }
 
 void FlexContainer::_register_methods()
@@ -93,7 +113,7 @@ void FlexContainer::_register_methods()
         "flex_direction",
         &FlexContainer::set_direction,
         &FlexContainer::get_direction,
-        YGFlexDirectionColumn,
+        YGFlexDirectionRow,
         GODOT_METHOD_RPC_MODE_DISABLED,
         GODOT_PROPERTY_USAGE_DEFAULT,
         GODOT_PROPERTY_HINT_ENUM,
@@ -107,7 +127,7 @@ void FlexContainer::_register_methods()
         GODOT_METHOD_RPC_MODE_DISABLED,
         GODOT_PROPERTY_USAGE_DEFAULT,
         GODOT_PROPERTY_HINT_ENUM,
-        "FlexStart,FlexEnd,Center,SpaceBetween,SpaceAround,SpaceEvenly");
+        "FlexStart,Center,FlexEnd,SpaceBetween,SpaceAround,SpaceEvenly");
 
     register_property<FlexContainer, int>(
         "align_items",
@@ -117,19 +137,14 @@ void FlexContainer::_register_methods()
         GODOT_METHOD_RPC_MODE_DISABLED,
         GODOT_PROPERTY_USAGE_DEFAULT,
         GODOT_PROPERTY_HINT_ENUM,
-        "Auto,Stretch,FlexStart,FlexEnd,Center,Baseline,SpaceBetween,SpaceAround");
+        "Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround");
 }
 
 void FlexContainer::_resort()
 {
-    GODOT_LOG(0, "FlexContainer::_resort");
     Size2 rect = get_rect().size;
-    root->set_width(rect.x);
-    root->set_height(rect.y);
-    GODOT_LOG(0, "FlexContainer::init rect:");
-    Godot::print(Variant(rect));
-    GODOT_LOG(0, "FlexContainer::init root:");
-    Godot::print(Variant(root->get_computed_width()));
+    root->set_width(rect.width);
+    root->set_height(rect.height);
 
     // First pass for line wrapping and minimum size calculation.
     for (int i = 0; i < get_child_count(); i++)
@@ -143,32 +158,28 @@ void FlexContainer::_resort()
         {
             continue;
         }
-        Size2 child_msc = child->get_combined_minimum_size();
+        // Size2 child_msc = child->get_combined_minimum_size();
+        Size2 child_msc = child->get_size();
         int64_t id = child->get_instance_id();
-        // GODOT_LOG(0, "FlexContainer::insert children 0");
 
         if (!cached_children[id])
         {
             Ref<Flexbox> flexbox = Flexbox::_new();
-            // GODOT_LOG(0, "FlexContainer::insert children 1");
 
             cached_children[id] = flexbox;
-            // GODOT_LOG(0, "FlexContainer::insert children 1.1");
             double width = static_cast<double>(child_msc.width);
             double height = static_cast<double>(child_msc.height);
             flexbox->set_width(width);
             flexbox->set_height(height);
-            GODOT_LOG(0, "FlexContainer::insert children: " + String::num_real(width) + "," + String::num_real(height));
             double cw = flexbox->get_computed_width();
             double ch = flexbox->get_computed_height();
-            Godot::print(Variant(flexbox->get_computed_width()));
-            Godot::print(Variant(flexbox->get_computed_height()));
             root->insert_child(*flexbox, i);
-            // GODOT_LOG(0, "FlexContainer::insert children 2");
         }
     }
-    GODOT_LOG(0, "FlexContainer::insert children count:" + String::num_real(root->get_child_count()));
     Vector2 ofs;
+    // Second pass for layout calculation.
+    root->calculate_layout(YGUndefined, YGUndefined, YGDirectionLTR);
+
     for (int i = 0; i < get_child_count(); i++)
     {
         Control *child = Object::cast_to<Control>(get_child(i));
@@ -186,7 +197,7 @@ void FlexContainer::_resort()
         ofs.y = flexbox->get_computed_top();
         Size2 child_size = {static_cast<real_t>(flexbox->get_computed_width()), static_cast<real_t>(flexbox->get_computed_height())};
         Rect2 child_rect = Rect2(ofs, child_size);
-        GODOT_LOG(0, "FlexContainer::fit children" + String::num_real(ofs.x) + "," + String::num_real(ofs.y) + "," + String::num_real(child_size.width) + "," + String::num_real(child_size.height));
+
         fit_child_in_rect(child, child_rect);
     }
 }
@@ -221,19 +232,16 @@ Size2 FlexContainer::get_minimum_size() const
 //
 Flexbox::Flexbox()
 {
-    // GODOT_LOG(0, "Flexbox constructor");
-    // _init();
 }
 Flexbox::~Flexbox()
 {
-    GODOT_LOG(0, "Flexbox destructor");
 }
 
 void Flexbox::_init()
 {
-    m_node = YGNodeNewWithConfig(YGConfigGetDefault());
+    // m_node = YGNodeNewWithConfig(YGConfigGetDefault());
+    m_node = YGNodeNew();
     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
-    // GODOT_LOG(0, "Flexbox::_init");
 }
 
 void Flexbox::dirtied()
@@ -355,6 +363,7 @@ void Flexbox::set_flex_shrink(double flexShrink)
 //
 void Flexbox::set_width(double width)
 {
+    // GODOT_LOG(0, "Flexbox::set_width " + String::num_real(width));
     YGNodeStyleSetWidth(m_node, width);
 }
 
@@ -370,6 +379,7 @@ void Flexbox::set_width_auto()
 
 void Flexbox::set_height(double height)
 {
+    // GODOT_LOG(0, "Flexbox::set_height " + String::num_real(height));
     YGNodeStyleSetHeight(m_node, height);
 }
 
@@ -770,7 +780,7 @@ void Flexbox::_register_methods()
 {
     // register_method("create", &Flexbox::createDefault);
     // register_method("createWithConfig", &Flexbox::createWithConfig);
-    GODOT_LOG(0, "Flexbox::_register_methods");
+    // GODOT_LOG(0, "Flexbox::_register_methods");
     // register_property<Flexbox, int>("position_type", &Flexbox::set_position_type, &Flexbox::get_position_type, YGPositionTypeStatic);
     // register_method("destroy", &Flexbox::destroy);
     register_method("copy_style", &Flexbox::copy_style);

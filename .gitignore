@@ -61,3 +61,4 @@ vsproj/x86/
 vsproj/gdsqlite.vcxproj.*
 
 .vscode
+demo/addons
