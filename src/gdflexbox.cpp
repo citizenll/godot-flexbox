@@ -831,7 +831,7 @@ void Flexbox::set_dirtied_func(Ref<FuncRef> funcRef)
 
 void Flexbox::unset_dirtied_func(void)
 {
-    m_dirtiedFunc = nullptr;
+    m_dirtiedFunc.unref();
 
     YGNodeSetDirtiedFunc(m_node, nullptr);
 }
