@@ -215,6 +215,7 @@ namespace godot
         Dictionary cached_children;
 
         void _resort();
+        virtual void fit_child_in_rect(Control *p_child, const Rect2 &p_rect);
         virtual Size2 get_minimum_size() const;
 
     protected:
@@ -229,6 +230,12 @@ namespace godot
 
         void set_justify_content(int justifyContent);
         int get_justify_content(void) const;
+
+        void set_align_content(int alignContent);
+        int get_align_content(void) const;
+
+        void set_flex_wrap(int flexWrap);
+        int get_flex_wrap(void) const;
     };
 };
 

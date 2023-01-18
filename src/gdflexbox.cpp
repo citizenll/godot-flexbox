@@ -19,12 +19,12 @@ static YGSize globalMeasureFunc(
 {
     Flexbox &node = *reinterpret_cast<Flexbox *>(YGNodeGetContext(nodeRef));
 
-    Dictionary &size = node.call_measure_func(width, widthMode, height, heightMode);
+    const Dictionary &size = node.call_measure_func(width, widthMode, height, heightMode);
     Variant w = size["width"];
     Variant h = size["height"];
     YGSize ygSize = {static_cast<float>(w), static_cast<float>(h)};
-    String info = "[measure] width: " + String::num_real(w) + " height: " + String::num_real(h);
-    GODOT_LOG(0, info);
+    // String info = "[measure] width: " + String::num_real(w) + " height: " + String::num_real(h);
+    // GODOT_LOG(0, info);
     return ygSize;
 }
 
@@ -76,7 +76,7 @@ void FlexContainer::_init()
 void FlexContainer::set_direction(int direction)
 {
     root->set_flex_direction(direction);
-    // queue_sort();
+    queue_sort();
 }
 
 int FlexContainer::get_direction() const
@@ -87,7 +87,7 @@ int FlexContainer::get_direction() const
 void FlexContainer::set_align_items(int alignItems)
 {
     root->set_align_items(alignItems);
-    // queue_sort();
+    queue_sort();
 }
 
 int FlexContainer::get_align_items() const
@@ -98,13 +98,37 @@ int FlexContainer::get_align_items() const
 void FlexContainer::set_justify_content(int justifyContent)
 {
     root->set_justify_content(justifyContent);
-    // queue_sort();
+    queue_sort();
 }
 
 int FlexContainer::get_justify_content() const
 {
     return root->get_justify_content();
 }
+
+void FlexContainer::set_align_content(int alignContent)
+{
+    root->set_align_content(alignContent);
+    queue_sort();
+}
+
+int FlexContainer::get_align_content() const
+{
+    return root->get_align_content();
+}
+
+void FlexContainer::set_flex_wrap(int wrap)
+{
+    root->set_flex_wrap(wrap);
+    queue_sort();
+}
+
+int FlexContainer::get_flex_wrap() const
+{
+    return root->get_flex_wrap();
+}
+
+//
 
 void FlexContainer::_register_methods()
 {
@@ -138,6 +162,40 @@ void FlexContainer::_register_methods()
         GODOT_PROPERTY_USAGE_DEFAULT,
         GODOT_PROPERTY_HINT_ENUM,
         "Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround");
+
+    register_property<FlexContainer, int>(
+        "align_content",
+        &FlexContainer::set_align_content,
+        &FlexContainer::get_align_content,
+        YGAlignAuto,
+        GODOT_METHOD_RPC_MODE_DISABLED,
+        GODOT_PROPERTY_USAGE_DEFAULT,
+        GODOT_PROPERTY_HINT_ENUM,
+        "Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround");
+
+    register_property<FlexContainer, int>(
+        "flex_wrap",
+        &FlexContainer::set_flex_wrap,
+        &FlexContainer::get_flex_wrap,
+        YGWrapNoWrap,
+        GODOT_METHOD_RPC_MODE_DISABLED,
+        GODOT_PROPERTY_USAGE_DEFAULT,
+        GODOT_PROPERTY_HINT_ENUM,
+        "NoWrap,Wrap,WrapReverse");
+}
+
+void FlexContainer::fit_child_in_rect(Control *p_child, const Rect2 &p_rect)
+{
+    ERR_FAIL_COND(!p_child);
+    // ERR_FAIL_COND(p_child->get_parent() != this);
+
+    Size2 minsize = p_child->get_combined_minimum_size();
+    Rect2 r = p_rect;
+
+    p_child->set_position(r.position);
+    p_child->set_size(r.size);
+    p_child->set_rotation(0);
+    p_child->set_scale(Vector2(1, 1));
 }
 
 void FlexContainer::_resort()
@@ -173,6 +231,18 @@ void FlexContainer::_resort()
             flexbox->set_height(height);
             double cw = flexbox->get_computed_width();
             double ch = flexbox->get_computed_height();
+
+            int16_t hFlags = child->get_h_size_flags();
+            int16_t vFlags = child->get_v_size_flags();
+            if ((hFlags & SIZE_EXPAND) || (vFlags & SIZE_EXPAND))
+            {
+                flexbox->set_flex_grow(child->get_stretch_ratio());
+            }
+            if ((hFlags & SIZE_SHRINK_CENTER) || (vFlags & SIZE_SHRINK_CENTER))
+            {
+                flexbox->set_flex_shrink(1);
+            }
+
             root->insert_child(*flexbox, i);
         }
     }
@@ -716,7 +786,7 @@ void Flexbox::set_measure_func(Ref<FuncRef> funcRef)
 
 void Flexbox::unset_measure_func(void)
 {
-    m_measureFunc = nullptr;
+    m_measureFunc.unref();
 
     YGNodeSetMeasureFunc(m_node, nullptr);
 }
@@ -737,7 +807,7 @@ Dictionary Flexbox::call_measure_func(
     argument_array.append(widthMode);
     argument_array.append(height);
     argument_array.append(heightMode);
-    Dictionary size = m_measureFunc->call_funcv(argument_array);
+    Dictionary size = m_measureFunc->call_funcv(argument_array); // cast to Dictionary
     return size;
 }
 //
