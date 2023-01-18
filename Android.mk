@@ -27,6 +27,17 @@ LOCAL_SRC_FILES := \
 src/gdflexbox.cpp \
 src/library.cpp \
 src/yoga/Yoga.cpp \
+src/yoga/YGNode.cpp \
+src/yoga/YGNodePrint.cpp \
+src/yoga/YGStyle.cpp \
+src/yoga/YGValue.cpp \
+src/yoga/YGConfig.cpp \
+src/yoga/YGEnums.cpp \
+src/yoga/YGFloatOptional.cpp \
+src/yoga/YGLayout.cpp \
+src/yoga/Utils.cpp \
+src/yoga/YGMacros.cpp \
+src/yoga/event/event.cpp \
 
 LOCAL_C_INCLUDES := \
 godot-cpp/godot-headers \

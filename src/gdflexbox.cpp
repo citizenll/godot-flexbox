@@ -232,16 +232,21 @@ void FlexContainer::_resort()
             double cw = flexbox->get_computed_width();
             double ch = flexbox->get_computed_height();
 
+            // grow and shrink
             int16_t hFlags = child->get_h_size_flags();
             int16_t vFlags = child->get_v_size_flags();
-            if ((hFlags & SIZE_EXPAND) || (vFlags & SIZE_EXPAND))
+            bool expand = (hFlags & SIZE_EXPAND) || (vFlags & SIZE_EXPAND);
+            bool shrink = (hFlags & SIZE_SHRINK_CENTER) || (vFlags & SIZE_SHRINK_CENTER);
+            if (expand)
             {
                 flexbox->set_flex_grow(child->get_stretch_ratio());
             }
-            if ((hFlags & SIZE_SHRINK_CENTER) || (vFlags & SIZE_SHRINK_CENTER))
+            if (shrink)
             {
-                flexbox->set_flex_shrink(1);
+                real_t ratio = child->get_stretch_ratio(); // when shrink, use the stretch ratio if not expand
+                flexbox->set_flex_shrink(expand ? 1.0 : ratio);
             }
+            // margin
 
             root->insert_child(*flexbox, i);
         }
@@ -249,7 +254,6 @@ void FlexContainer::_resort()
     Vector2 ofs;
     // Second pass for layout calculation.
     root->calculate_layout(YGUndefined, YGUndefined, YGDirectionLTR);
-
     for (int i = 0; i < get_child_count(); i++)
     {
         Control *child = Object::cast_to<Control>(get_child(i));
@@ -274,6 +278,7 @@ void FlexContainer::_resort()
 
 void FlexContainer::_notification(int p_what)
 {
+    // GODOT_LOG(0,"FlexContainer::_notification "+String::num(p_what));
     switch (p_what)
     {
     case NOTIFICATION_SORT_CHILDREN:
