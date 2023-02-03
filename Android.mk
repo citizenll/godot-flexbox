@@ -33,7 +33,6 @@ src/yoga/YGStyle.cpp \
 src/yoga/YGValue.cpp \
 src/yoga/YGConfig.cpp \
 src/yoga/YGEnums.cpp \
-src/yoga/YGFloatOptional.cpp \
 src/yoga/YGLayout.cpp \
 src/yoga/Utils.cpp \
 src/yoga/YGMacros.cpp \

@@ -46,7 +46,6 @@ margin_top = 76.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-flex_wrap = 1
 
 [node name="ColorRect" type="ColorRect" parent="Panel/FlexContainer"]
 anchor_right = 0.515
@@ -69,7 +68,7 @@ valign = 1
 [node name="ColorRect2" type="ColorRect" parent="Panel/FlexContainer"]
 margin_right = 100.0
 margin_bottom = 100.0
-size_flags_horizontal = 2
+size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.952941, 0.329412, 0.329412, 1 )
 __meta__ = {
