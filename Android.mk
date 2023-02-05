@@ -35,7 +35,6 @@ src/yoga/YGConfig.cpp \
 src/yoga/YGEnums.cpp \
 src/yoga/YGLayout.cpp \
 src/yoga/Utils.cpp \
-src/yoga/YGMacros.cpp \
 src/yoga/event/event.cpp \
 
 LOCAL_C_INCLUDES := \

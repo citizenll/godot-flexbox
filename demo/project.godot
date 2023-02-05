@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Flexbox"
-run/main_scene="res://Demo.tscn"
+run/main_scene="res://FlexDemo.tscn"
 config/icon="res://icon.png"
 
 [editor_plugins]

@@ -6,8 +6,11 @@
 tool
 extends EditorPlugin
 
+var Icon = preload("icon.svg")
+var FlexContainer = preload("flex_container.gd")
+
 func _enter_tree():
-	add_custom_type("FlexContainer", "Container", preload("res://addons/godot-flexbox/bin/gdflexbox.gdns"), preload("res://addons/godot-flexbox/icon.svg"))
+	add_custom_type("FlexContainer", "Container", FlexContainer, Icon)
 
 func _exit_tree():
 	remove_custom_type("FlexContainer")
