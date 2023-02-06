@@ -26,6 +26,7 @@ LOCAL_LDLIBS := -llog
 LOCAL_SRC_FILES := \
 src/gdflexbox.cpp \
 src/library.cpp \
+src/yoga/log.cpp \
 src/yoga/Yoga.cpp \
 src/yoga/YGNode.cpp \
 src/yoga/YGNodePrint.cpp \
