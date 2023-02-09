@@ -1,0 +1,267 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/godot-flexbox/inspector/properties.gd" type="Script" id=1]
+[ext_resource path="res://addons/godot-flexbox/icon.svg" type="Texture" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.172549, 0.207843, 0.286275, 1 )
+
+[node name="Properties" type="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 196, 280 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 1 )
+
+[node name="VC" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+
+[node name="Category" type="ColorRect" parent="VC"]
+margin_right = 1024.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 24 )
+color = Color( 0.25098, 0.270588, 0.32549, 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VC/Category"]
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -41.0
+margin_right = 41.0
+
+[node name="Icon" type="TextureRect" parent="VC/Category/HBoxContainer"]
+margin_right = 20.0
+margin_bottom = 24.0
+texture = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="VC/Category/HBoxContainer"]
+margin_left = 24.0
+margin_right = 82.0
+margin_bottom = 24.0
+size_flags_vertical = 7
+text = "FlexChild"
+valign = 1
+
+[node name="FlexProperty" type="HBoxContainer" parent="VC"]
+margin_top = 28.0
+margin_right = 1024.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VC/FlexProperty"]
+margin_top = 3.0
+margin_right = 510.0
+margin_bottom = 17.0
+size_flags_horizontal = 3
+text = "Align Self"
+
+[node name="OptionButton" type="OptionButton" parent="VC/FlexProperty"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Auto"
+items = [ "Auto", null, false, 0, null, "FlexStart", null, false, 1, null, "Center", null, false, 2, null, "FlexEnd", null, false, 3, null, "Stretch", null, false, 4, null, "Baseline", null, false, 5, null, "SpaceBetween", null, false, 6, null, "SpaceAround", null, false, 7, null, "Auto", null, false, 8, null, "FlexStart", null, false, 9, null, "Center", null, false, 10, null, "FlexEnd", null, false, 11, null, "Stretch", null, false, 12, null, "Baseline", null, false, 13, null, "SpaceBetween", null, false, 14, null, "SpaceAround", null, false, 15, null, "Auto", null, false, 16, null, "FlexStart", null, false, 17, null, "Center", null, false, 18, null, "FlexEnd", null, false, 19, null, "Stretch", null, false, 20, null, "Baseline", null, false, 21, null, "SpaceBetween", null, false, 22, null, "SpaceAround", null, false, 23, null ]
+selected = 0
+
+[node name="Basis" type="HBoxContainer" parent="VC"]
+margin_top = 52.0
+margin_right = 1024.0
+margin_bottom = 76.0
+
+[node name="Label" type="Label" parent="VC/Basis"]
+margin_top = 5.0
+margin_right = 510.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Basis"
+valign = 1
+
+[node name="LineEdit" type="LineEdit" parent="VC/Basis"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "auto"
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Grow" type="HBoxContainer" parent="VC"]
+margin_top = 80.0
+margin_right = 1024.0
+margin_bottom = 104.0
+
+[node name="Label" type="Label" parent="VC/Grow"]
+margin_top = 5.0
+margin_right = 510.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Grow"
+valign = 1
+
+[node name="LineEdit" type="LineEdit" parent="VC/Grow"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "0"
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Shrink" type="HBoxContainer" parent="VC"]
+margin_top = 108.0
+margin_right = 1024.0
+margin_bottom = 132.0
+
+[node name="Label" type="Label" parent="VC/Shrink"]
+margin_top = 5.0
+margin_right = 510.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+text = "Shrink"
+valign = 1
+
+[node name="LineEdit" type="LineEdit" parent="VC/Shrink"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "1"
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Label" type="Label" parent="VC"]
+margin_top = 136.0
+margin_right = 1024.0
+margin_bottom = 150.0
+text = "Layout"
+valign = 1
+
+[node name="Layout" type="HBoxContainer" parent="VC"]
+margin_top = 154.0
+margin_right = 1024.0
+margin_bottom = 250.0
+size_flags_horizontal = 3
+custom_constants/separation = 20
+alignment = 1
+
+[node name="Padding" type="Control" parent="VC/Layout"]
+margin_left = 308.0
+margin_right = 502.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 194, 96 )
+
+[node name="LETop" type="LineEdit" parent="VC/Layout/Padding"]
+margin_left = 64.0
+margin_right = 122.0
+margin_bottom = 24.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="LERight" type="LineEdit" parent="VC/Layout/Padding"]
+margin_left = 135.0
+margin_top = 32.0
+margin_right = 193.0
+margin_bottom = 56.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="LEBottom" type="LineEdit" parent="VC/Layout/Padding"]
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 122.0
+margin_bottom = 88.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="LELeft" type="LineEdit" parent="VC/Layout/Padding"]
+margin_top = 32.0
+margin_right = 58.0
+margin_bottom = 56.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Label" type="Label" parent="VC/Layout/Padding"]
+margin_left = 64.0
+margin_top = 32.0
+margin_right = 128.0
+margin_bottom = 54.0
+text = "PADDING"
+align = 1
+valign = 1
+
+[node name="Margin" type="Control" parent="VC/Layout"]
+margin_left = 522.0
+margin_right = 716.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 194, 96 )
+
+[node name="LETop" type="LineEdit" parent="VC/Layout/Margin"]
+margin_left = 64.0
+margin_right = 122.0
+margin_bottom = 24.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="LERight" type="LineEdit" parent="VC/Layout/Margin"]
+margin_left = 135.0
+margin_top = 32.0
+margin_right = 193.0
+margin_bottom = 56.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="LEBottom" type="LineEdit" parent="VC/Layout/Margin"]
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 122.0
+margin_bottom = 88.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="LELeft" type="LineEdit" parent="VC/Layout/Margin"]
+margin_top = 32.0
+margin_right = 58.0
+margin_bottom = 56.0
+text = "0"
+align = 1
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Label" type="Label" parent="VC/Layout/Margin"]
+margin_left = 64.0
+margin_top = 32.0
+margin_right = 128.0
+margin_bottom = 54.0
+text = "MARGIN"
+align = 1
+valign = 1
+
+[connection signal="text_changed" from="VC/Basis/LineEdit" to="." method="_on_LineEdit_text_changed" binds= [ "basis" ]]
+[connection signal="text_changed" from="VC/Grow/LineEdit" to="." method="_on_LineEdit_text_changed" binds= [ "grow" ]]
+[connection signal="text_changed" from="VC/Shrink/LineEdit" to="." method="_on_LineEdit_text_changed" binds= [ "shrink" ]]
+[connection signal="text_changed" from="VC/Layout/Padding/LETop" to="." method="_on_LineEdit_text_changed" binds= [ "padding", 0 ]]
+[connection signal="text_changed" from="VC/Layout/Padding/LERight" to="." method="_on_LineEdit_text_changed" binds= [ "padding", 1 ]]
+[connection signal="text_changed" from="VC/Layout/Padding/LEBottom" to="." method="_on_LineEdit_text_changed" binds= [ "padding", 2 ]]
+[connection signal="text_changed" from="VC/Layout/Padding/LELeft" to="." method="_on_LineEdit_text_changed" binds= [ "padding", 3 ]]
+[connection signal="text_changed" from="VC/Layout/Margin/LETop" to="." method="_on_LineEdit_text_changed" binds= [ "margin", 0 ]]
+[connection signal="text_changed" from="VC/Layout/Margin/LERight" to="." method="_on_LineEdit_text_changed" binds= [ "margin", 1 ]]
+[connection signal="text_changed" from="VC/Layout/Margin/LEBottom" to="." method="_on_LineEdit_text_changed" binds= [ "margin", 2 ]]
+[connection signal="text_changed" from="VC/Layout/Margin/LELeft" to="." method="_on_LineEdit_text_changed" binds= [ "margin", 3 ]]
