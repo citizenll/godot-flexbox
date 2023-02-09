@@ -4,6 +4,8 @@ extends Container
 var Flexbox = preload("bin/flexbox.gdns")
 var PropertyList = preload("flex_property.gd")
 
+const EDGES = [1, 2, 3, 0]
+
 var _root = Flexbox.new()
 var _children_flex = {}
 var _property_list = PropertyList.new(
@@ -65,32 +67,78 @@ func _resort() -> void:
 	var childCount = get_child_count()
 	for i in range(childCount):
 		var c = get_child(i)
+		if c.is_set_as_toplevel():
+			continue
+		if not c or not c.is_visible_in_tree():
+			continue
+		c.set_meta("_flex_child", 1)
+
 		var cid = c.get_instance_id()
 		var flexbox = _children_flex.get(cid)
 		if not flexbox:
-			var size = c.get_size()
+			var size = c.rect_min_size
 			flexbox = Flexbox.new()
 			flexbox.set_width(size.x)
 			flexbox.set_height(size.y)
-			_root.insert_child(flexbox, i)
+			#
+			var flexMetas = c.get_meta("_flex_metas", -1)
+			if typeof(flexMetas) == TYPE_DICTIONARY and flexMetas.size():
+				apply_flex_meta(flexbox, flexMetas)
+			#
 			_children_flex[cid] = flexbox
+			_root.insert_child(flexbox, i)
 	#
 	_root.calculate_layout(NAN, NAN, 1)
 	#
 	for i in range(childCount):
 		var c = get_child(i)
+		if c.is_set_as_toplevel():
+			continue
+		if not c or not c.is_visible_in_tree():
+			continue
+		#
 		var flexbox = _children_flex[c.get_instance_id()]
-		c.set_position(Vector2(flexbox.get_computed_left(), flexbox.get_computed_top()))
-		c.set_size(Vector2(flexbox.get_computed_width(), flexbox.get_computed_height()))
+		var ofs = Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
+		var size = Vector2(flexbox.get_computed_width(), flexbox.get_computed_height())
+		var rect = Rect2(ofs, size)
+		fit_child_in_rect(c, rect)
 
 
 func fit_child_in_rect(child: Control, rect: Rect2) -> void:
 	var cid = child.get_instance_id()
-	var size = child.get_combined_minimum_size()
 	child.set_position(rect.position)
 	child.set_size(rect.size)
 	child.set_rotation(0)
 	child.set_scale(Vector2(1, 1))
+
+
+func apply_flex_meta(node, metas):
+	for key in metas:
+		var value = metas[key]
+		apply_property(node, key, value)
+
+
+func apply_property(node, prop, value):
+	match prop:
+		"basis":
+			if typeof(value) == TYPE_STRING and value == "auto":
+				node.set_flex_basis_auto()
+			else:
+				node.set_flex_basis(value)
+		"grow":
+			node.set_flex_grow(value)
+		"padding":
+			for i in range(4):
+				var edge = EDGES[i]
+				node.set_padding(edge, value[i])  #value->edge, value1->padding
+		"margin":
+			for i in range(4):
+				var edge = EDGES[i]
+				var value1 = value[i]
+				if typeof(value1) == TYPE_STRING and value1 == "auto":
+					node.set_margin_auto(edge)
+				else:
+					node.set_margin(edge, value1)  #value->edge, value1->margin
 
 
 func property_changed(property, value):
@@ -105,6 +153,10 @@ func property_changed(property, value):
 			_root.set_align_items(value)
 		"alignment/align_content":
 			_root.set_align_content(value)
+	queue_sort()
+
+
+func update_layout():
 	queue_sort()
 
 

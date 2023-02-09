@@ -62,3 +62,4 @@ vsproj/gdsqlite.vcxproj.*
 
 .vscode
 demo/addons
+dist

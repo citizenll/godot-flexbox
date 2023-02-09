@@ -10,21 +10,27 @@ anchor_bottom = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
-flex/flex_direction = 1
+flex/flex_direction = 0
 flex/flex_wrap = 0
-alignment/justify_content = 3
+alignment/justify_content = 5
 alignment/align_items = 1
 alignment/align_content = 0
 
 [node name="ColorRect" type="ColorRect" parent="FlexContainer"]
 anchor_right = 0.515
-margin_top = 500.0
 margin_right = -427.36
-margin_bottom = 600.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
-"_edit_group_": true
+"_edit_group_": true,
+"_flex_child": 1,
+"_flex_metas": {
+"basis": "auto",
+"grow": 0,
+"margin": [ 0, 0, 0, 0 ]
+}
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect"]
@@ -36,14 +42,19 @@ align = 1
 valign = 1
 
 [node name="ColorRect2" type="ColorRect" parent="FlexContainer"]
-margin_top = 333.0
+margin_top = 100.0
 margin_right = 100.0
-margin_bottom = 433.0
+margin_bottom = 400.0
+rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.952941, 0.329412, 0.329412, 1 )
 __meta__ = {
-"_edit_group_": true
+"_edit_group_": true,
+"_flex_child": 1,
+"_flex_metas": {
+"grow": 0
+}
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect2"]
@@ -55,14 +66,19 @@ align = 1
 valign = 1
 
 [node name="ColorRect3" type="ColorRect" parent="FlexContainer"]
-margin_top = 167.0
+margin_top = 400.0
 margin_right = 100.0
-margin_bottom = 267.0
+margin_bottom = 500.0
+rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.431373, 0.764706, 0.419608, 1 )
 __meta__ = {
-"_edit_group_": true
+"_edit_group_": true,
+"_flex_child": 1,
+"_flex_metas": {
+"grow": 0
+}
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect3"]
@@ -76,13 +92,16 @@ align = 1
 valign = 1
 
 [node name="ColorRect4" type="ColorRect" parent="FlexContainer"]
+margin_top = 500.0
 margin_right = 100.0
-margin_bottom = 100.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.470588, 0.498039, 0.952941, 1 )
 __meta__ = {
-"_edit_group_": true
+"_edit_group_": true,
+"_flex_child": 1
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect4"]

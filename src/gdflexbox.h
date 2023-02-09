@@ -199,44 +199,6 @@ namespace godot
         Ref<FuncRef> m_measureFunc;
         Ref<FuncRef> m_dirtiedFunc;
     };
-
-    class FlexContainer : public Container
-    {
-        GODOT_CLASS(FlexContainer, Container)
-
-    public:
-        FlexContainer();
-        void _init();
-        static void _register_methods();
-
-    public:
-        int cached_size;
-        Ref<Flexbox> root;
-        Dictionary cached_children;
-
-        void _resort();
-        virtual void fit_child_in_rect(Control *p_child, const Rect2 &p_rect);
-        virtual Size2 get_minimum_size() const;
-
-    protected:
-        void _notification(int p_what);
-
-    public: // setters
-        void set_direction(int direction);
-        int get_direction(void) const;
-
-        void set_align_items(int alignItems);
-        int get_align_items(void) const;
-
-        void set_justify_content(int justifyContent);
-        int get_justify_content(void) const;
-
-        void set_align_content(int alignContent);
-        int get_align_content(void) const;
-
-        void set_flex_wrap(int flexWrap);
-        int get_flex_wrap(void) const;
-    };
 };
 
 #endif
