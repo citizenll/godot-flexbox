@@ -16,7 +16,6 @@ func can_handle(object: Object) -> bool:
 
 
 func property_changed(properties, object):
-	print("property_changed", properties)
 	object.set_meta("_flex_metas", properties)
 	var parent = object.get_parent()
 	if parent.has_method("update_layout"):

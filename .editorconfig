@@ -1,0 +1,8 @@
+[*.{js,py,json}]
+indent_style = space
+indent_size = 4
+[*.{gd,tscn}]
+indent_style = tab
+[{package.json}]
+indent_style = space
+indent_size = 2

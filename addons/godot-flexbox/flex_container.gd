@@ -28,7 +28,7 @@ var _property_list = PropertyList.new(
 		[
 			"alignment/align_items",
 			TYPE_INT,
-			0,
+			1,
 			PROPERTY_HINT_ENUM,
 			"Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround"
 		],
@@ -56,7 +56,6 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_SORT_CHILDREN:
 		_resort()
-		print("sort children")
 
 
 func _resort() -> void:
@@ -75,18 +74,19 @@ func _resort() -> void:
 
 		var cid = c.get_instance_id()
 		var flexbox = _children_flex.get(cid)
+		var size = c.rect_min_size
 		if not flexbox:
-			var size = c.rect_min_size
 			flexbox = Flexbox.new()
-			flexbox.set_width(size.x)
-			flexbox.set_height(size.y)
-			#
-			var flexMetas = c.get_meta("_flex_metas", -1)
-			if typeof(flexMetas) == TYPE_DICTIONARY and flexMetas.size():
-				apply_flex_meta(flexbox, flexMetas)
-			#
 			_children_flex[cid] = flexbox
 			_root.insert_child(flexbox, i)
+		#
+		flexbox.set_width(size.x)
+		flexbox.set_height(size.y)
+		#
+		var flexMetas = c.get_meta("_flex_metas", -1)
+		if typeof(flexMetas) == TYPE_DICTIONARY and flexMetas.size():
+			apply_flex_meta(flexbox, flexMetas)
+		#
 	#
 	_root.calculate_layout(NAN, NAN, 1)
 	#

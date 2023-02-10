@@ -9,8 +9,9 @@ anchor_bottom = 1.0
 [node name="FlexContainer" type="Container" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = -1.0
 script = ExtResource( 1 )
-flex/flex_direction = 0
+flex/flex_direction = 2
 flex/flex_wrap = 0
 alignment/justify_content = 5
 alignment/align_items = 1
@@ -18,7 +19,8 @@ alignment/align_content = 0
 
 [node name="ColorRect" type="ColorRect" parent="FlexContainer"]
 anchor_right = 0.515
-margin_right = -427.36
+margin_left = 87.0
+margin_right = -339.845
 margin_bottom = 100.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
@@ -42,9 +44,9 @@ align = 1
 valign = 1
 
 [node name="ColorRect2" type="ColorRect" parent="FlexContainer"]
-margin_top = 100.0
-margin_right = 100.0
-margin_bottom = 400.0
+margin_left = 274.0
+margin_right = 374.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -53,7 +55,8 @@ __meta__ = {
 "_edit_group_": true,
 "_flex_child": 1,
 "_flex_metas": {
-"grow": 0
+"grow": 0,
+"margin": [ 0, 0, 0, 0 ]
 }
 }
 
@@ -66,9 +69,9 @@ align = 1
 valign = 1
 
 [node name="ColorRect3" type="ColorRect" parent="FlexContainer"]
-margin_top = 400.0
-margin_right = 100.0
-margin_bottom = 500.0
+margin_left = 462.0
+margin_right = 562.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -92,9 +95,9 @@ align = 1
 valign = 1
 
 [node name="ColorRect4" type="ColorRect" parent="FlexContainer"]
-margin_top = 500.0
-margin_right = 100.0
-margin_bottom = 600.0
+margin_left = 649.0
+margin_right = 749.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -113,3 +116,33 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "4"
 align = 1
 valign = 1
+
+[node name="FlexContainer" type="Container" parent="FlexContainer"]
+margin_left = 836.0
+margin_right = 936.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 100, 100 )
+script = ExtResource( 1 )
+__meta__ = {
+"_flex_child": 1,
+"_flex_metas": {
+"grow": 0
+}
+}
+flex/flex_direction = 2
+flex/flex_wrap = 0
+alignment/justify_content = 0
+alignment/align_items = 1
+alignment/align_content = 0
+
+[node name="Panel" type="Panel" parent="FlexContainer/FlexContainer"]
+margin_right = 100.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 50, 100 )
+size_flags_horizontal = 3
+__meta__ = {
+"_flex_child": 1,
+"_flex_metas": {
+"grow": 1
+}
+}
