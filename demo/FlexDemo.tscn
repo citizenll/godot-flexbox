@@ -11,16 +11,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -1.0
 script = ExtResource( 1 )
-flex/flex_direction = 2
+flex/flex_direction = 0
 flex/flex_wrap = 0
-alignment/justify_content = 5
+alignment/justify_content = 0
 alignment/align_items = 1
 alignment/align_content = 0
 
-[node name="ColorRect" type="ColorRect" parent="FlexContainer"]
+[node name="ColorRect1" type="ColorRect" parent="FlexContainer"]
 anchor_right = 0.515
-margin_left = 87.0
-margin_right = -339.845
+margin_right = -426.845
 margin_bottom = 100.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
@@ -31,11 +30,12 @@ __meta__ = {
 "_flex_metas": {
 "basis": "auto",
 "grow": 0,
-"margin": [ 0, 0, 0, 0 ]
+"margin": [ 0, 0, 0, 0 ],
+"padding": [ 10, 10, 10, 10 ]
 }
 }
 
-[node name="Label" type="Label" parent="FlexContainer/ColorRect"]
+[node name="Label" type="Label" parent="FlexContainer/ColorRect1"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
@@ -44,9 +44,9 @@ align = 1
 valign = 1
 
 [node name="ColorRect2" type="ColorRect" parent="FlexContainer"]
-margin_left = 274.0
-margin_right = 374.0
-margin_bottom = 100.0
+margin_top = 100.0
+margin_right = 100.0
+margin_bottom = 200.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -69,9 +69,9 @@ align = 1
 valign = 1
 
 [node name="ColorRect3" type="ColorRect" parent="FlexContainer"]
-margin_left = 462.0
-margin_right = 562.0
-margin_bottom = 100.0
+margin_top = 200.0
+margin_right = 100.0
+margin_bottom = 300.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -95,9 +95,9 @@ align = 1
 valign = 1
 
 [node name="ColorRect4" type="ColorRect" parent="FlexContainer"]
-margin_left = 649.0
-margin_right = 749.0
-margin_bottom = 100.0
+margin_top = 300.0
+margin_right = 100.0
+margin_bottom = 400.0
 rect_min_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -117,10 +117,10 @@ text = "4"
 align = 1
 valign = 1
 
-[node name="FlexContainer" type="Container" parent="FlexContainer"]
-margin_left = 836.0
-margin_right = 936.0
-margin_bottom = 100.0
+[node name="ChilContainer" type="Container" parent="FlexContainer"]
+margin_top = 400.0
+margin_right = 100.0
+margin_bottom = 500.0
 rect_min_size = Vector2( 100, 100 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -135,7 +135,7 @@ alignment/justify_content = 0
 alignment/align_items = 1
 alignment/align_content = 0
 
-[node name="Panel" type="Panel" parent="FlexContainer/FlexContainer"]
+[node name="Panel" type="Panel" parent="FlexContainer/ChilContainer"]
 margin_right = 100.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 50, 100 )
@@ -146,3 +146,9 @@ __meta__ = {
 "grow": 1
 }
 }
+
+[node name="Label" type="Label" parent="FlexContainer/ChilContainer/Panel"]
+margin_right = 96.0
+margin_bottom = 31.0
+text = "FlexNode as child"
+autowrap = true
