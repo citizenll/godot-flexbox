@@ -1,4 +1,4 @@
-#Godot Flexbox layout ![](https://img.shields.io/badge/yoga-%E2%9A%A1-green)
+# Godot Flexbox layout ![](https://img.shields.io/badge/yoga-%E2%9A%A1-green)
 
 <br>
 <p align="center">
@@ -34,6 +34,7 @@ This is a work in progress. it can be used basically, and test worked windows an
 - Change the `FlexDirection` property in inspector, and you can see the layout changed, also you can change the child properties in child inspector
 
 ![inspector](./docs/flex-container-property.png)![inspector](./docs/flex-child-property.png)
+
 *dark theme only for child inspector*
 
 ## Todo
