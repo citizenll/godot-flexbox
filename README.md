@@ -20,7 +20,7 @@ This is a work in progress. it can be used basically, and test worked windows an
 - [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 - [Flexbox Froggy](https://flexboxfroggy.com/)
 
-##Getting Started
+## Getting Started
 ### Installation
 - get the latest release from the godot asset library [here](https://godotengine.org/asset-library/asset/7114)
 - clone the repo and copy the `addons` folder into your project
