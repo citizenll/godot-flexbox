@@ -12,7 +12,6 @@ Flexbox layout for Godot Engine
 
 ## WIP 🧑‍💻
 ✔️Godot 3.x (3.5 tested)
-![platform](https://shields.io/badge/platform-linux--64%20%7C%20win--32%20%7C%20osx--64%20%7C%20win--64-lightgrey) 
 This is a work in progress. it can be used basically, and test worked windows and android.
 
 
