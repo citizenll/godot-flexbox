@@ -3,7 +3,7 @@ on:
   push:
     tags:
     - '*'
-    branches: [ master, main ]
+    branches: [ godot-4.x, main ]
 
 # Global Settings
 env:

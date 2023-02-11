@@ -3,7 +3,7 @@ on:
   push:
     tags:
     - '*'
-    branches: [ master, main ]
+    branches: [ godot-4.x, main ]
     
 # Global Settings
 # Only use the release target for android, otherwise further modification of the make-files is required!
