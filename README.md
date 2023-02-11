@@ -21,7 +21,7 @@ This is a work in progress. it can be used basically, and test worked windows an
 
 ## Getting Started
 ### Installation
-- get the latest release from the godot asset library [here](https://godotengine.org/asset-library/asset/7114)
+- get the latest release from the godot asset library [here](https://godotengine.org/asset-library/asset/1648)
 - clone the repo and copy the `addons` folder into your project
 
 ### Usage
