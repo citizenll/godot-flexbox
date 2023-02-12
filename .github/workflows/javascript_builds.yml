@@ -2,7 +2,7 @@ name: 🌐 Javascript Builds
 on:
   push:
     tags:
-    - '*'
+      - release*
     branches: [ godot-4.x, main ]
 
 env:
