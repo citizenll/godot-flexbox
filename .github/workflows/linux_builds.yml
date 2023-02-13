@@ -4,6 +4,9 @@ on:
     tags:
       - release*
     branches: [ godot-4.x, main ]
+    paths:
+      - '**.h'
+      - '**.cpp'
 
 # Global Settings
 env:

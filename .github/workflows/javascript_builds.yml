@@ -4,6 +4,9 @@ on:
     tags:
       - release*
     branches: [ godot-4.x, main ]
+    paths:
+      - '**.h'
+      - '**.cpp'
 
 env:
   PROJECT_FOLDER: .

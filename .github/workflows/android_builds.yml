@@ -4,6 +4,9 @@ on:
     tags:
       - release*
     branches: [ godot-4.x, main ]
+    paths:
+      - '**.h'
+      - '**.cpp'
     
 # Global Settings
 # Only use the release target for android, otherwise further modification of the make-files is required!
