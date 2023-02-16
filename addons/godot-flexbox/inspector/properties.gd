@@ -5,7 +5,7 @@ extends Control
 onready var basisNode := $VC/Basis/LineEdit
 onready var growNode := $VC/Grow/LineEdit
 onready var shrinkNode := $VC/Shrink/LineEdit
-onready var optionButton := $VC/FlexProperty/OptionButton
+onready var optionButton := $VC/FlexProperty/AlignSelfOpts
 #padding
 onready var paddingTopNode := $VC/Layout/Padding/LETop
 onready var paddingRightNode := $VC/Layout/Padding/LERight
@@ -29,7 +29,7 @@ var margins := [0, 0, 0, 0]  #["top","right","bottom","left"]
 
 func _ready():
 	var props = editObject.get_meta("_flex_metas")
-
+	optionButton.clear()  #why already has options?
 	for i in options:
 		optionButton.add_item(i)
 	if not props:
@@ -37,7 +37,7 @@ func _ready():
 	#
 	for key in props:
 		exportProp[key] = props[key]
-		if key == "direction":
+		if key == "align_self":
 			optionButton.select(props[key])
 		elif key == "basis":
 			basisNode.text = str(props[key])
@@ -83,3 +83,8 @@ func _parse_value(value, default = null):
 		return "auto"
 	else:
 		return intVal
+
+
+func _on_AlignSelfOpts_item_selected(index):
+	exportProp["align_self"] = index
+	emit_signal("property_changed", exportProp)

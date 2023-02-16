@@ -10,6 +10,7 @@
 
 ## Work in Progress 🧑‍💻
 ✔️ Godot 3.x (tested on 3.5)
+
 This is a work in progress. It can be used with basic functionality, and has been tested on Windows and Android.
 
 ### Learn About Flexbox
@@ -31,7 +32,6 @@ This is a work in progress. It can be used with basic functionality, and has bee
 
 ![inspector](./docs/flex-container-property.png)![inspector](./docs/flex-child-property.png)
 
-*(The child inspector is only available in dark theme.)*
 
 ## Todo
 - [ ] Godot 4.x support

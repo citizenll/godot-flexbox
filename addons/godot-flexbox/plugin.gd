@@ -13,6 +13,7 @@ var _inspector_plugin
 
 
 func _enter_tree():
+	_get_theme()
 	_inspector_plugin = InspectorPlugin.new()
 	add_custom_type("FlexContainer", "Container", FlexContainer, Icon)
 	add_inspector_plugin(_inspector_plugin)
@@ -22,3 +23,11 @@ func _exit_tree():
 	remove_inspector_plugin(_inspector_plugin)
 	remove_custom_type("FlexContainer")
 	_inspector_plugin = null
+
+
+
+func _get_theme():
+	var editor_settings = get_editor_interface().get_editor_settings()
+	var my_theme = editor_settings.get_setting("interface/theme/preset")
+	#print("my_theme:", my_theme)
+	

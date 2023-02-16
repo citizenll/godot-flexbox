@@ -4,7 +4,7 @@
 
 # Imported translations (automatically generated from CSV files)
 *.translation
-
+build
 # Mono-specific ignores
 .mono/
 data_*/

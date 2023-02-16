@@ -139,6 +139,8 @@ func apply_property(node, prop, value):
 					node.set_margin_auto(edge)
 				else:
 					node.set_margin(edge, value1)  #value->edge, value1->margin
+		"align_self":
+			node.set_align_self(value)
 
 
 func property_changed(property, value):
