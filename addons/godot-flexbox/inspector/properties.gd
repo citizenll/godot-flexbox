@@ -1,6 +1,6 @@
 @tool
-signal property_changed
 extends Control
+signal property_changed
 
 @onready var basisNode := $VC/Basis/LineEdit
 @onready var growNode := $VC/Grow/LineEdit

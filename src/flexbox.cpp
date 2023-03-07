@@ -1,5 +1,8 @@
 #include "flexbox.h"
 
+#include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+
 using namespace godot;
 //
 static Variant fromYGValue(YGValue const &ygValue)
@@ -37,17 +40,12 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
 //
 Flexbox::Flexbox()
 {
-    //
+	// UtilityFunctions::print("C:Flexbox ready");
+    m_node = YGNodeNew();
+    YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
 }
 Flexbox::~Flexbox()
 {
-}
-
-void Flexbox::_init()
-{
-    // m_node = YGNodeNewWithConfig(YGConfigGetDefault());
-    m_node = YGNodeNew();
-    YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
 }
 
 void Flexbox::dirtied()

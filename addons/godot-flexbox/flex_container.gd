@@ -5,7 +5,7 @@ var PropertyList = preload("flex_property.gd")
 
 const EDGES = [1, 2, 3, 0]
 
-var _root = Flexbox.new()
+var _root
 var _children_flex = {}
 var _property_list = PropertyList.new(
 	[
@@ -43,6 +43,7 @@ var _property_list = PropertyList.new(
 
 
 func _ready() -> void:
+	_root = Flexbox.new()
 	_root.set_flex_direction(get("flex/flex_direction"))
 	_root.set_flex_wrap(get("flex/flex_wrap"))
 	_root.set_justify_content(get("alignment/justify_content"))
@@ -50,6 +51,7 @@ func _ready() -> void:
 	_root.set_align_content(get("alignment/align_content"))
 
 	set_process_input(false)
+	print(">constainer ready")
 
 
 func _notification(what: int) -> void:
@@ -143,6 +145,9 @@ func apply_property(node, prop, value):
 
 
 func property_changed(property, value):
+	if not is_inside_tree():
+		await self.ready
+	print(">property_changed")
 	match property:
 		"flex/flex_direction":
 			_root.set_flex_direction(value)

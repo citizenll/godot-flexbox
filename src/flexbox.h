@@ -1,11 +1,9 @@
 #ifndef FLEXBOX_CLASS_H
 #define FLEXBOX_CLASS_H
 
-#include <godot_cpp/core/class_db.hpp>
-#include <godot_cpp/core/binder_common.hpp>
+#include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
-#include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/core/binder_common.hpp>
 
 #include <memory>
 #include <yoga/Yoga.h>

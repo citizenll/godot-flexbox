@@ -1,156 +1,105 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dhvh3x81ere1s"]
 
-[ext_resource path="res://addons/godot-flexbox/flex_container.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://addons/godot-flexbox/flex_container.gd" id="1"]
 
 [node name="FlexDemo" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="FlexContainer" type="Container" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1.0
-script = ExtResource( 1 )
+script = ExtResource("1")
 flex/flex_direction = 2
 flex/flex_wrap = 0
-alignment/justify_content = 0
+alignment/justify_content = 3
 alignment/align_items = 1
 alignment/align_content = 0
 
 [node name="ColorRect1" type="ColorRect" parent="FlexContainer"]
-anchor_right = 0.515
-offset_top = 250.0
-offset_right = -426.845
-offset_bottom = 350.0
-custom_minimum_size = Vector2( 100, 100 )
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-__meta__ = {
-"_edit_group_": true,
-"_flex_child": 1,
-"_flex_metas": {
-"align_self": 2,
-"basis": "auto",
-"grow": 0,
-"margin": [ 0, 0, 0, 0 ],
-"padding": [ 10, 10, 10, 10 ]
-}
-}
+metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect1"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "1"
-align = 1
-valign = 1
 
 [node name="ColorRect2" type="ColorRect" parent="FlexContainer"]
-offset_left = 100.0
-offset_right = 200.0
-offset_bottom = 100.0
-custom_minimum_size = Vector2( 100, 100 )
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-color = Color( 0.952941, 0.329412, 0.329412, 1 )
-__meta__ = {
-"_edit_group_": true,
-"_flex_child": 1,
-"_flex_metas": {
-"grow": 0,
-"margin": [ 0, 0, 0, 0 ]
-}
-}
+color = Color(0.952941, 0.329412, 0.329412, 1)
+metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect2"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "2"
-align = 1
-valign = 1
 
 [node name="ColorRect3" type="ColorRect" parent="FlexContainer"]
-offset_left = 200.0
-offset_right = 300.0
-offset_bottom = 100.0
-custom_minimum_size = Vector2( 100, 100 )
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-color = Color( 0.431373, 0.764706, 0.419608, 1 )
-__meta__ = {
-"_edit_group_": true,
-"_flex_child": 1,
-"_flex_metas": {
-"grow": 0
-}
-}
+color = Color(0.431373, 0.764706, 0.419608, 1)
+metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect3"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 5.0
 offset_right = 5.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "3"
-align = 1
-valign = 1
 
 [node name="ColorRect4" type="ColorRect" parent="FlexContainer"]
-offset_left = 300.0
-offset_right = 400.0
-offset_bottom = 100.0
-custom_minimum_size = Vector2( 100, 100 )
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-color = Color( 0.470588, 0.498039, 0.952941, 1 )
-__meta__ = {
-"_edit_group_": true,
-"_flex_child": 1
-}
+color = Color(0.470588, 0.498039, 0.952941, 1)
+metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect4"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 5.0
 offset_right = 5.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "4"
-align = 1
-valign = 1
 
 [node name="ChilContainer" type="Container" parent="FlexContainer"]
-offset_left = 400.0
-offset_right = 500.0
-offset_bottom = 100.0
-custom_minimum_size = Vector2( 100, 100 )
-script = ExtResource( 1 )
-__meta__ = {
-"_flex_child": 1,
-"_flex_metas": {
-"grow": 0
-}
-}
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+script = ExtResource("1")
 flex/flex_direction = 2
 flex/flex_wrap = 0
 alignment/justify_content = 0
 alignment/align_items = 1
 alignment/align_content = 0
+metadata/_flex_child = 1
 
 [node name="Panel" type="Panel" parent="FlexContainer/ChilContainer"]
-offset_right = 100.0
-offset_bottom = 100.0
-custom_minimum_size = Vector2( 50, 100 )
+custom_minimum_size = Vector2(50, 100)
+layout_mode = 2
 size_flags_horizontal = 3
-__meta__ = {
-"_flex_child": 1,
-"_flex_metas": {
-"grow": 1
-}
-}
+metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ChilContainer/Panel"]
+layout_mode = 0
 offset_right = 96.0
 offset_bottom = 31.0
 text = "FlexNode as child"
-autowrap = true
