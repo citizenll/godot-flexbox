@@ -9,7 +9,8 @@
 </p>
 
 ## Work in Progress 🧑‍💻
-✔️ Godot 3.x (tested on 3.5)
+🎉 Support 4.0 now !
+✔️ Godot 3.5 version find [here](https://github.com/citizenll/godot-flexbox/tree/main)
 
 This is a work in progress. It can be used with basic functionality, and has been tested on Windows and Android.
 
@@ -31,13 +32,6 @@ This is a work in progress. It can be used with basic functionality, and has bee
 - Change the `FlexDirection` property in the inspector, and you will see the layout change. You can also change the child properties in the child inspector.
 
 ![inspector](./docs/flex-container-property.png)![inspector](./docs/flex-child-property.png)
-
-
-## Todo
-- [ ] Godot 4.x support
-- [ ] More properties
-- [ ] More platforms (WebAssembly)
-
 
 
 ## License
