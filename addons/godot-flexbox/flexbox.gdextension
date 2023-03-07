@@ -1,0 +1,21 @@
+[configuration]
+
+entry_symbol = "flexbox_library_init"
+
+[libraries]
+
+macos = "res://addons/godot-flexbox/bin/libgdflexbox.macos.template_debug.framework"
+macos.template_release = "res://addons/godot-flexbox/bin/libgdflexbox.macos.template_release.framework"
+windows.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.windows.template_debug.x86_64.dll"
+windows.template_release.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.windows.template_release.x86_64.dll"
+linux.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.linux.template_debug.x86_64.so"
+linux.template_release.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.linux.template_release.x86_64.so"
+
+[dependencies]
+
+macos = {}
+macos.template_release = {}
+windows.x86_64 = {}
+windows.template_release.x86_64 = {}
+linux.x86_64 = {}
+linux.template_release.x86_64 = {}

@@ -1,23 +1,23 @@
-tool
+@tool
 signal property_changed
 extends Control
 
-onready var basisNode := $VC/Basis/LineEdit
-onready var growNode := $VC/Grow/LineEdit
-onready var shrinkNode := $VC/Shrink/LineEdit
-onready var optionButton := $VC/FlexProperty/AlignSelfOpts
+@onready var basisNode := $VC/Basis/LineEdit
+@onready var growNode := $VC/Grow/LineEdit
+@onready var shrinkNode := $VC/Shrink/LineEdit
+@onready var optionButton := $VC/FlexProperty/AlignSelfOpts
 #padding
-onready var paddingTopNode := $VC/Layout/Padding/LETop
-onready var paddingRightNode := $VC/Layout/Padding/LERight
-onready var paddingBottomNode := $VC/Layout/Padding/LEBottom
-onready var paddingLeftNode := $VC/Layout/Padding/LELeft
-onready var paddingNodes = [paddingTopNode, paddingRightNode, paddingBottomNode, paddingLeftNode]
+@onready var paddingTopNode := $VC/Layout/Padding/LETop
+@onready var paddingRightNode := $VC/Layout/Padding/LERight
+@onready var paddingBottomNode := $VC/Layout/Padding/LEBottom
+@onready var paddingLeftNode := $VC/Layout/Padding/LELeft
+@onready var paddingNodes = [paddingTopNode, paddingRightNode, paddingBottomNode, paddingLeftNode]
 #margin
-onready var marginTopNode := $VC/Layout/Margin/LETop
-onready var marginRightNode := $VC/Layout/Margin/LERight
-onready var marginBottomNode := $VC/Layout/Margin/LEBottom
-onready var marginLeftNode := $VC/Layout/Margin/LELeft
-onready var marginNodes = [marginTopNode, marginRightNode, marginBottomNode, marginLeftNode]
+@onready var marginTopNode := $VC/Layout/Margin/LETop
+@onready var marginRightNode := $VC/Layout/Margin/LERight
+@onready var marginBottomNode := $VC/Layout/Margin/LEBottom
+@onready var marginLeftNode := $VC/Layout/Margin/LELeft
+@onready var marginNodes = [marginTopNode, marginRightNode, marginBottomNode, marginLeftNode]
 
 var options = "Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround".split(",")
 

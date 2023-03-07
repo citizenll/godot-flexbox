@@ -9,7 +9,7 @@ anchor_bottom = 1.0
 [node name="FlexContainer" type="Container" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -1.0
+offset_right = -1.0
 script = ExtResource( 1 )
 flex/flex_direction = 2
 flex/flex_wrap = 0
@@ -19,10 +19,10 @@ alignment/align_content = 0
 
 [node name="ColorRect1" type="ColorRect" parent="FlexContainer"]
 anchor_right = 0.515
-margin_top = 250.0
-margin_right = -426.845
-margin_bottom = 350.0
-rect_min_size = Vector2( 100, 100 )
+offset_top = 250.0
+offset_right = -426.845
+offset_bottom = 350.0
+custom_minimum_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 __meta__ = {
@@ -46,10 +46,10 @@ align = 1
 valign = 1
 
 [node name="ColorRect2" type="ColorRect" parent="FlexContainer"]
-margin_left = 100.0
-margin_right = 200.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 100, 100 )
+offset_left = 100.0
+offset_right = 200.0
+offset_bottom = 100.0
+custom_minimum_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.952941, 0.329412, 0.329412, 1 )
@@ -71,10 +71,10 @@ align = 1
 valign = 1
 
 [node name="ColorRect3" type="ColorRect" parent="FlexContainer"]
-margin_left = 200.0
-margin_right = 300.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 100, 100 )
+offset_left = 200.0
+offset_right = 300.0
+offset_bottom = 100.0
+custom_minimum_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.431373, 0.764706, 0.419608, 1 )
@@ -89,18 +89,18 @@ __meta__ = {
 [node name="Label" type="Label" parent="FlexContainer/ColorRect3"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_right = 5.0
+offset_left = 5.0
+offset_right = 5.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "3"
 align = 1
 valign = 1
 
 [node name="ColorRect4" type="ColorRect" parent="FlexContainer"]
-margin_left = 300.0
-margin_right = 400.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 100, 100 )
+offset_left = 300.0
+offset_right = 400.0
+offset_bottom = 100.0
+custom_minimum_size = Vector2( 100, 100 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color( 0.470588, 0.498039, 0.952941, 1 )
@@ -112,18 +112,18 @@ __meta__ = {
 [node name="Label" type="Label" parent="FlexContainer/ColorRect4"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_right = 5.0
+offset_left = 5.0
+offset_right = 5.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "4"
 align = 1
 valign = 1
 
 [node name="ChilContainer" type="Container" parent="FlexContainer"]
-margin_left = 400.0
-margin_right = 500.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 100, 100 )
+offset_left = 400.0
+offset_right = 500.0
+offset_bottom = 100.0
+custom_minimum_size = Vector2( 100, 100 )
 script = ExtResource( 1 )
 __meta__ = {
 "_flex_child": 1,
@@ -138,9 +138,9 @@ alignment/align_items = 1
 alignment/align_content = 0
 
 [node name="Panel" type="Panel" parent="FlexContainer/ChilContainer"]
-margin_right = 100.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 50, 100 )
+offset_right = 100.0
+offset_bottom = 100.0
+custom_minimum_size = Vector2( 50, 100 )
 size_flags_horizontal = 3
 __meta__ = {
 "_flex_child": 1,
@@ -150,7 +150,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ChilContainer/Panel"]
-margin_right = 96.0
-margin_bottom = 31.0
+offset_right = 96.0
+offset_bottom = 31.0
 text = "FlexNode as child"
 autowrap = true

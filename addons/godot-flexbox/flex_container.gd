@@ -1,7 +1,6 @@
-tool
+@tool
 extends Container
 
-var Flexbox = preload("bin/flexbox.gdns")
 var PropertyList = preload("flex_property.gd")
 
 const EDGES = [1, 2, 3, 0]
@@ -66,7 +65,7 @@ func _resort() -> void:
 	var childCount = get_child_count()
 	for i in range(childCount):
 		var c = get_child(i)
-		if c.is_set_as_toplevel():
+		if c.is_set_as_top_level():
 			continue
 		if not c or not c.is_visible_in_tree():
 			continue
@@ -74,7 +73,7 @@ func _resort() -> void:
 
 		var cid = c.get_instance_id()
 		var flexbox = _children_flex.get(cid)
-		var size = c.rect_min_size
+		var size = c.custom_minimum_size
 		if not flexbox:
 			flexbox = Flexbox.new()
 			_children_flex[cid] = flexbox
@@ -92,15 +91,15 @@ func _resort() -> void:
 	#
 	for i in range(childCount):
 		var c = get_child(i)
-		if c.is_set_as_toplevel():
+		if c.is_set_as_top_level():
 			continue
 		if not c or not c.is_visible_in_tree():
 			continue
 		#
 		var flexbox = _children_flex[c.get_instance_id()]
-		var ofs = Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
+		var offset = Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
 		var size = Vector2(flexbox.get_computed_width(), flexbox.get_computed_height())
-		var rect = Rect2(ofs, size)
+		var rect = Rect2(offset, size)
 		fit_child_in_rect(c, rect)
 
 
@@ -172,7 +171,7 @@ func _set(property, value):
 	if dirty:
 		#print("set:", dirty, " ", property, " ", value)
 		property_changed(property, value)
-		property_list_changed_notify()
+		notify_property_list_changed()
 
 
 func _get_property_list():

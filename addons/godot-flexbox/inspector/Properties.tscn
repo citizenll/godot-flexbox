@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/godot-flexbox/inspector/properties.gd" type="Script" id=1]
-[ext_resource path="res://addons/godot-flexbox/icon.svg" type="Texture" id=2]
+[ext_resource path="res://addons/godot-flexbox/icon.svg" type="Texture2D" id=2]
 
 [node name="Properties" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 196, 280 )
+custom_minimum_size = Vector2( 196, 280 )
 size_flags_horizontal = 3
 script = ExtResource( 1 )
 
@@ -16,19 +16,19 @@ anchor_bottom = 1.0
 size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="VC"]
-margin_right = 1024.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 0, 20 )
+offset_right = 1024.0
+offset_bottom = 20.0
+custom_minimum_size = Vector2( 0, 20 )
 
 [node name="Icon" type="TextureRect" parent="VC/Panel"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -73.0
-margin_top = -9.0
-margin_right = -53.0
-margin_bottom = 15.0
+offset_left = -73.0
+offset_top = -9.0
+offset_right = -53.0
+offset_bottom = 15.0
 texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="VC/Panel"]
@@ -36,225 +36,225 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -52.0
-margin_top = -12.0
-margin_right = 72.0
-margin_bottom = 12.0
+offset_left = -52.0
+offset_top = -12.0
+offset_right = 72.0
+offset_bottom = 12.0
 size_flags_vertical = 7
 text = "FlexChild Properties"
 valign = 1
 
 [node name="HSeparator" type="HSeparator" parent="VC"]
-margin_top = 24.0
-margin_right = 1024.0
-margin_bottom = 28.0
+offset_top = 24.0
+offset_right = 1024.0
+offset_bottom = 28.0
 
 [node name="FlexProperty" type="HBoxContainer" parent="VC"]
-margin_top = 32.0
-margin_right = 1024.0
-margin_bottom = 52.0
+offset_top = 32.0
+offset_right = 1024.0
+offset_bottom = 52.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="VC/FlexProperty"]
-margin_top = 3.0
-margin_right = 510.0
-margin_bottom = 17.0
+offset_top = 3.0
+offset_right = 510.0
+offset_bottom = 17.0
 size_flags_horizontal = 3
 text = "Align Self"
 
 [node name="AlignSelfOpts" type="OptionButton" parent="VC/FlexProperty"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 20.0
+offset_left = 514.0
+offset_right = 1024.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 text = "Auto"
 items = [ "Auto", null, false, 0, null, "FlexStart", null, false, 1, null, "Center", null, false, 2, null, "FlexEnd", null, false, 3, null, "Stretch", null, false, 4, null, "Baseline", null, false, 5, null, "SpaceBetween", null, false, 6, null, "SpaceAround", null, false, 7, null, "Auto", null, false, 8, null, "FlexStart", null, false, 9, null, "Center", null, false, 10, null, "FlexEnd", null, false, 11, null, "Stretch", null, false, 12, null, "Baseline", null, false, 13, null, "SpaceBetween", null, false, 14, null, "SpaceAround", null, false, 15, null, "Auto", null, false, 16, null, "FlexStart", null, false, 17, null, "Center", null, false, 18, null, "FlexEnd", null, false, 19, null, "Stretch", null, false, 20, null, "Baseline", null, false, 21, null, "SpaceBetween", null, false, 22, null, "SpaceAround", null, false, 23, null ]
 selected = 0
 
 [node name="Basis" type="HBoxContainer" parent="VC"]
-margin_top = 56.0
-margin_right = 1024.0
-margin_bottom = 80.0
+offset_top = 56.0
+offset_right = 1024.0
+offset_bottom = 80.0
 
 [node name="Label" type="Label" parent="VC/Basis"]
-margin_top = 5.0
-margin_right = 510.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 510.0
+offset_bottom = 19.0
 size_flags_horizontal = 3
 text = "Basis"
 valign = 1
 
 [node name="LineEdit" type="LineEdit" parent="VC/Basis"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 514.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 text = "auto"
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="Grow" type="HBoxContainer" parent="VC"]
-margin_top = 84.0
-margin_right = 1024.0
-margin_bottom = 108.0
+offset_top = 84.0
+offset_right = 1024.0
+offset_bottom = 108.0
 
 [node name="Label" type="Label" parent="VC/Grow"]
-margin_top = 5.0
-margin_right = 510.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 510.0
+offset_bottom = 19.0
 size_flags_horizontal = 3
 text = "Grow"
 valign = 1
 
 [node name="LineEdit" type="LineEdit" parent="VC/Grow"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 514.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 text = "0"
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="Shrink" type="HBoxContainer" parent="VC"]
-margin_top = 112.0
-margin_right = 1024.0
-margin_bottom = 136.0
+offset_top = 112.0
+offset_right = 1024.0
+offset_bottom = 136.0
 
 [node name="Label" type="Label" parent="VC/Shrink"]
-margin_top = 5.0
-margin_right = 510.0
-margin_bottom = 19.0
+offset_top = 5.0
+offset_right = 510.0
+offset_bottom = 19.0
 size_flags_horizontal = 3
 text = "Shrink"
 valign = 1
 
 [node name="LineEdit" type="LineEdit" parent="VC/Shrink"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 24.0
+offset_left = 514.0
+offset_right = 1024.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 text = "1"
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="Label" type="Label" parent="VC"]
-margin_top = 140.0
-margin_right = 1024.0
-margin_bottom = 154.0
+offset_top = 140.0
+offset_right = 1024.0
+offset_bottom = 154.0
 text = "Layout"
 valign = 1
 
 [node name="Layout" type="HBoxContainer" parent="VC"]
-margin_top = 158.0
-margin_right = 1024.0
-margin_bottom = 254.0
+offset_top = 158.0
+offset_right = 1024.0
+offset_bottom = 254.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
 
 [node name="Padding" type="Control" parent="VC/Layout"]
 visible = false
-margin_left = 308.0
-margin_right = 502.0
-margin_bottom = 96.0
-rect_min_size = Vector2( 194, 96 )
+offset_left = 308.0
+offset_right = 502.0
+offset_bottom = 96.0
+custom_minimum_size = Vector2( 194, 96 )
 
 [node name="LETop" type="LineEdit" parent="VC/Layout/Padding"]
-margin_left = 64.0
-margin_right = 122.0
-margin_bottom = 24.0
+offset_left = 64.0
+offset_right = 122.0
+offset_bottom = 24.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="LERight" type="LineEdit" parent="VC/Layout/Padding"]
-margin_left = 135.0
-margin_top = 32.0
-margin_right = 193.0
-margin_bottom = 56.0
+offset_left = 135.0
+offset_top = 32.0
+offset_right = 193.0
+offset_bottom = 56.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="LEBottom" type="LineEdit" parent="VC/Layout/Padding"]
-margin_left = 64.0
-margin_top = 64.0
-margin_right = 122.0
-margin_bottom = 88.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 122.0
+offset_bottom = 88.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="LELeft" type="LineEdit" parent="VC/Layout/Padding"]
-margin_top = 32.0
-margin_right = 58.0
-margin_bottom = 56.0
+offset_top = 32.0
+offset_right = 58.0
+offset_bottom = 56.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="Label" type="Label" parent="VC/Layout/Padding"]
-margin_left = 64.0
-margin_top = 32.0
-margin_right = 128.0
-margin_bottom = 54.0
+offset_left = 64.0
+offset_top = 32.0
+offset_right = 128.0
+offset_bottom = 54.0
 text = "PADDING"
 align = 1
 valign = 1
 
 [node name="Margin" type="Control" parent="VC/Layout"]
-margin_left = 415.0
-margin_right = 609.0
-margin_bottom = 96.0
-rect_min_size = Vector2( 194, 96 )
+offset_left = 415.0
+offset_right = 609.0
+offset_bottom = 96.0
+custom_minimum_size = Vector2( 194, 96 )
 
 [node name="LETop" type="LineEdit" parent="VC/Layout/Margin"]
-margin_left = 64.0
-margin_right = 122.0
-margin_bottom = 24.0
+offset_left = 64.0
+offset_right = 122.0
+offset_bottom = 24.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="LERight" type="LineEdit" parent="VC/Layout/Margin"]
-margin_left = 135.0
-margin_top = 32.0
-margin_right = 193.0
-margin_bottom = 56.0
+offset_left = 135.0
+offset_top = 32.0
+offset_right = 193.0
+offset_bottom = 56.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="LEBottom" type="LineEdit" parent="VC/Layout/Margin"]
-margin_left = 64.0
-margin_top = 64.0
-margin_right = 122.0
-margin_bottom = 88.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 122.0
+offset_bottom = 88.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="LELeft" type="LineEdit" parent="VC/Layout/Margin"]
-margin_top = 32.0
-margin_right = 58.0
-margin_bottom = 56.0
+offset_top = 32.0
+offset_right = 58.0
+offset_bottom = 56.0
 text = "0"
 align = 1
 caret_blink = true
-caret_blink_speed = 0.5
+caret_blink_interval = 0.5
 
 [node name="Label" type="Label" parent="VC/Layout/Margin"]
-margin_left = 64.0
-margin_top = 32.0
-margin_right = 128.0
-margin_bottom = 54.0
+offset_left = 64.0
+offset_top = 32.0
+offset_right = 128.0
+offset_bottom = 54.0
 text = "MARGIN"
 align = 1
 valign = 1
