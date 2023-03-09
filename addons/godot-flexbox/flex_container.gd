@@ -6,7 +6,8 @@ var PropertyList = preload("flex_property.gd")
 const EDGES = [1, 2, 3, 0]
 
 var _root
-var _children_flex = {}
+var _initialized = false
+var _flex_cache = {}
 var _property_list = PropertyList.new(
 	[
 		[
@@ -42,8 +43,11 @@ var _property_list = PropertyList.new(
 )
 
 
-func _ready() -> void:
+func _init():
 	_root = Flexbox.new()
+
+
+func _ready() -> void:
 	_root.set_flex_direction(get("flex/flex_direction"))
 	_root.set_flex_wrap(get("flex/flex_wrap"))
 	_root.set_justify_content(get("alignment/justify_content"))
@@ -51,19 +55,25 @@ func _ready() -> void:
 	_root.set_align_content(get("alignment/align_content"))
 
 	set_process_input(false)
-	print(">constainer ready")
+	_initialized = true
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_SORT_CHILDREN:
-		_resort()
+	match what:
+		NOTIFICATION_SORT_CHILDREN:
+			_resort()
+		[NOTIFICATION_TRANSLATION_CHANGED, NOTIFICATION_LAYOUT_DIRECTION_CHANGED]:
+			queue_sort()
+		
 
 
 func _resort() -> void:
 	var rootSize = get_size()
 	_root.set_width(rootSize.x)
 	_root.set_height(rootSize.y)
+	print("-----------sort-------------")
 	#
+	var s = Time.get_ticks_usec()
 	var childCount = get_child_count()
 	for i in range(childCount):
 		var c = get_child(i)
@@ -74,21 +84,21 @@ func _resort() -> void:
 		c.set_meta("_flex_child", 1)
 
 		var cid = c.get_instance_id()
-		var flexbox = _children_flex.get(cid)
+		var flexbox = _flex_cache.get(cid)
 		var size = c.custom_minimum_size
 		if not flexbox:
 			flexbox = Flexbox.new()
-			_children_flex[cid] = flexbox
 			_root.insert_child(flexbox, i)
+			_flex_cache[cid] = flexbox
 		#
-		flexbox.set_width(size.x)
-		flexbox.set_height(size.y)
+		flexbox.set_min_width(size.x)
+		flexbox.set_min_height(size.y)
 		#
 		var flexMetas = c.get_meta("_flex_metas", -1)
 		if typeof(flexMetas) == TYPE_DICTIONARY and flexMetas.size():
 			apply_flex_meta(flexbox, flexMetas)
-		#
 	#
+	var calc = Time.get_ticks_usec()
 	_root.calculate_layout(NAN, NAN, 1)
 	#
 	for i in range(childCount):
@@ -98,11 +108,14 @@ func _resort() -> void:
 		if not c or not c.is_visible_in_tree():
 			continue
 		#
-		var flexbox = _children_flex[c.get_instance_id()]
+		var cid = c.get_instance_id()
+		var flexbox = _flex_cache[cid]
 		var offset = Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
 		var size = Vector2(flexbox.get_computed_width(), flexbox.get_computed_height())
+		
 		var rect = Rect2(offset, size)
 		fit_child_in_rect(c, rect)
+	print("-----------sort end-------------")
 
 
 func fit_child_in_rect(child: Control, rect: Rect2) -> void:
@@ -110,16 +123,16 @@ func fit_child_in_rect(child: Control, rect: Rect2) -> void:
 	child.set_position(rect.position)
 	child.set_size(rect.size)
 	child.set_rotation(0)
-	child.set_scale(Vector2(1, 1))
+	child.set_scale(Vector2.ONE)
 
 
 func apply_flex_meta(node, metas):
 	for key in metas:
 		var value = metas[key]
-		apply_property(node, key, value)
+		apply_child_property(node, key, value)
 
 
-func apply_property(node, prop, value):
+func apply_child_property(node, prop, value):
 	match prop:
 		"basis":
 			if typeof(value) == TYPE_STRING and value == "auto":
@@ -127,7 +140,10 @@ func apply_property(node, prop, value):
 			else:
 				node.set_flex_basis(value)
 		"grow":
+			print("setGrow:",value, node.is_dirty())
 			node.set_flex_grow(value)
+			print("getGrow:",node.get_flex_grow(),node.is_dirty())
+			
 		"padding":
 			for i in range(4):
 				var edge = EDGES[i]
@@ -144,10 +160,7 @@ func apply_property(node, prop, value):
 			node.set_align_self(value)
 
 
-func property_changed(property, value):
-	if not is_inside_tree():
-		await self.ready
-	print(">property_changed")
+func flex_property_changed(property, value):
 	match property:
 		"flex/flex_direction":
 			_root.set_flex_direction(value)
@@ -173,9 +186,8 @@ func _get(property):
 
 func _set(property, value):
 	var dirty = _property_list.set(property, value)
-	if dirty:
-		#print("set:", dirty, " ", property, " ", value)
-		property_changed(property, value)
+	if dirty and _initialized:
+		flex_property_changed(property, value)
 		notify_property_list_changed()
 
 

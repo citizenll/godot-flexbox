@@ -1,7 +1,7 @@
 #ifndef FLEXBOX_CLASS_H
 #define FLEXBOX_CLASS_H
 
-#include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
@@ -10,20 +10,28 @@
 
 using namespace godot;
 
-class Flexbox : public RefCounted
+class Flexbox : public Object
 {
-    GDCLASS(Flexbox, RefCounted);
+    GDCLASS(Flexbox, Object);
 
 protected:
     static void _bind_methods();
 
 public:
+    static Flexbox *create();
+    static Flexbox *createWithConfig(YGConfigRef *config);
     static void destroy(Flexbox *node);
     static Flexbox *fromYGNode(YGNodeRef nodeRef);
 
-    void _init();
+public:
     Flexbox();
     ~Flexbox();
+
+public:
+    void reset(void);
+
+// private:
+//     Flexbox(YGConfigRef *config);
 
 public:
     void copy_style(Flexbox *other);
@@ -152,7 +160,6 @@ public: // Dirtied func inspectors
     void call_dirtied_func(void);
 
 public: // Dirtiness accessors
-    void dirtied();
     void mark_dirty(void);
     bool is_dirty(void) const;
 

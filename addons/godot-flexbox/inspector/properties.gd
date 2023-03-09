@@ -28,11 +28,11 @@ var margins := [0, 0, 0, 0]  #["top","right","bottom","left"]
 
 
 func _ready():
-	var props = editObject.get_meta("_flex_metas")
+	var props = editObject.get_meta("_flex_metas", -1)
 	optionButton.clear()  #why already has options?
 	for i in options:
 		optionButton.add_item(i)
-	if not props:
+	if typeof(props) != TYPE_DICTIONARY:
 		return
 	#
 	for key in props:

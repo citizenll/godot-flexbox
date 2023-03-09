@@ -11,6 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="FlexContainer" type="Container" parent="."]
+modulate = Color(1, 1, 1, 0.356863)
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,7 +19,7 @@ offset_right = -1.0
 script = ExtResource("1")
 flex/flex_direction = 2
 flex/flex_wrap = 0
-alignment/justify_content = 3
+alignment/justify_content = 0
 alignment/align_items = 1
 alignment/align_content = 0
 
@@ -28,11 +29,20 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 metadata/_flex_child = 1
+metadata/_flex_metas = {
+"align_self": 0,
+"grow": 1,
+"margin": [10, 10, 0, 0]
+}
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect1"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "1"
 
 [node name="ColorRect2" type="ColorRect" parent="FlexContainer"]
@@ -97,6 +107,9 @@ custom_minimum_size = Vector2(50, 100)
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_flex_child = 1
+metadata/_flex_metas = {
+"grow": 0
+}
 
 [node name="Label" type="Label" parent="FlexContainer/ChilContainer/Panel"]
 layout_mode = 0

@@ -37,30 +37,57 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
 
     node.call_dirtied_func();
 }
+/* static */
+// Flexbox *Flexbox::create()
+// {
+//     return new Flexbox(nullptr);
+// }
+// /* static */
+// Flexbox *Flexbox::createWithConfig(YGConfigRef *config)
+// {
+//     return new Flexbox(config);
+// }
+
+// Flexbox::Flexbox(YGConfigRef *config)
+//     : m_node(
+//           config != nullptr ? YGNodeNewWithConfig(*config)
+//                             : YGNodeNew()),
+//       m_measureFunc(nullptr),
+//       m_dirtiedFunc(nullptr)
+// {
+//     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
+// }
 //
 Flexbox::Flexbox()
 {
-	// UtilityFunctions::print("C:Flexbox ready");
+    // UtilityFunctions::print("C:Flexbox ready");
     m_node = YGNodeNew();
     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
 }
 Flexbox::~Flexbox()
 {
+    // UtilityFunctions::print("C:Flexbox free");
+    YGNodeFree(m_node);
 }
 
-void Flexbox::dirtied()
-{
-    // GODOT_LOG(0, "Flexbox::dirtied");
-}
 //====================================================
-/* static */ Flexbox *Flexbox::fromYGNode(YGNodeRef nodeRef)
+/* static */
+Flexbox *Flexbox::fromYGNode(YGNodeRef nodeRef)
 {
     return reinterpret_cast<Flexbox *>(YGNodeGetContext(nodeRef));
 }
-/* static */ void Flexbox::destroy(Flexbox *node)
+/* static */
+void Flexbox::destroy(Flexbox *node)
 {
     delete node;
 }
+void Flexbox::reset(void)
+{
+    m_measureFunc.reset(nullptr);
+    m_dirtiedFunc.reset(nullptr);
+    YGNodeReset(m_node);
+}
+
 void Flexbox::copy_style(Flexbox *other)
 {
     YGNodeCopyStyle(m_node, other->m_node);
@@ -409,21 +436,23 @@ unsigned Flexbox::get_child_count(void) const
 
 Flexbox *Flexbox::get_parent(void)
 {
-    auto nodePtr = YGNodeGetParent(m_node);
+    YGNodeRef nodePtr = YGNodeGetParent(m_node);
 
     if (nodePtr == nullptr)
+    {
         return nullptr;
+    }
 
     return Flexbox::fromYGNode(nodePtr);
 }
 
 Flexbox *Flexbox::get_child(unsigned index)
 {
-    auto nodePtr = YGNodeGetChild(m_node, index);
-
+    YGNodeRef nodePtr = YGNodeGetChild(m_node, index);
     if (nodePtr == nullptr)
+    {
         return nullptr;
-
+    }
     return Flexbox::fromYGNode(nodePtr);
 }
 //
@@ -560,7 +589,7 @@ void Flexbox::call_dirtied_func(void)
 
 void Flexbox::set_dirtied_func(const Callable &funcRef)
 {
-    auto a = std::make_unique<Callable>(funcRef);
+    m_dirtiedFunc = std::make_unique<Callable>(funcRef);
 
     YGNodeSetDirtiedFunc(m_node, &globalDirtiedFunc);
 }
@@ -584,11 +613,11 @@ bool Flexbox::is_dirty(void) const
 
 void Flexbox::_bind_methods()
 {
-    // ClassDB::bind_method(D_METHOD("create", &Flexbox::createDefault);
+    // ClassDB::bind_static_method("Flexbox", D_METHOD("create"), &Flexbox::create);
     // ClassDB::bind_method(D_METHOD("createWithConfig", &Flexbox::createWithConfig);
     // GODOT_LOG(0, "Flexbox::_register_methods");
     // register_property<Flexbox, int>("position_type", &Flexbox::set_position_type, &Flexbox::get_position_type, YGPositionTypeStatic);
-    // ClassDB::bind_method(D_METHOD("destroy", &Flexbox::destroy);
+    ClassDB::bind_static_method("Flexbox", D_METHOD("destroy"), &Flexbox::destroy);
     ClassDB::bind_method(D_METHOD("copy_style"), &Flexbox::copy_style);
     ClassDB::bind_method(D_METHOD("set_position_type"), &Flexbox::set_position_type);
     ClassDB::bind_method(D_METHOD("set_position"), &Flexbox::set_position);
