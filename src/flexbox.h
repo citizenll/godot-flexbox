@@ -1,7 +1,7 @@
 #ifndef FLEXBOX_CLASS_H
 #define FLEXBOX_CLASS_H
 
-#include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/core/binder_common.hpp>
 
@@ -10,9 +10,9 @@
 
 using namespace godot;
 
-class Flexbox : public Object
+class Flexbox : public RefCounted
 {
-    GDCLASS(Flexbox, Object);
+    GDCLASS(Flexbox, RefCounted);
 
 protected:
     static void _bind_methods();

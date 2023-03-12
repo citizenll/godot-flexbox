@@ -37,6 +37,12 @@
             "platform": "ios",
             "artifact-extension": "dylib",
             "flags": "arch=arm64"
+        },
+        {
+            "name": "Wasm (Emscripten)",
+            "os": "ubuntu-20.04",
+            "platform": "javascript",
+            "artifact-extension": "wasm"
         }
     ]
 }

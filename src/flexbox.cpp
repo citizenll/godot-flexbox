@@ -60,13 +60,11 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
 //
 Flexbox::Flexbox()
 {
-    // UtilityFunctions::print("C:Flexbox ready");
     m_node = YGNodeNew();
     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
 }
 Flexbox::~Flexbox()
 {
-    // UtilityFunctions::print("C:Flexbox free");
     YGNodeFree(m_node);
 }
 
@@ -79,7 +77,7 @@ Flexbox *Flexbox::fromYGNode(YGNodeRef nodeRef)
 /* static */
 void Flexbox::destroy(Flexbox *node)
 {
-    delete node;
+    //nothing to do
 }
 void Flexbox::reset(void)
 {
@@ -194,7 +192,6 @@ void Flexbox::set_flex_shrink(double flexShrink)
 //
 void Flexbox::set_width(double width)
 {
-    // GODOT_LOG(0, "Flexbox::set_width " + String::num_real(width));
     YGNodeStyleSetWidth(m_node, width);
 }
 
@@ -210,7 +207,6 @@ void Flexbox::set_width_auto()
 
 void Flexbox::set_height(double height)
 {
-    // GODOT_LOG(0, "Flexbox::set_height " + String::num_real(height));
     YGNodeStyleSetHeight(m_node, height);
 }
 
@@ -463,12 +459,6 @@ void Flexbox::calculate_layout(double width, double height, int direction)
         m_node, width, height, static_cast<YGDirection>(direction));
 }
 
-// void Flexbox::calculate_layout()
-// {
-//     YGNodeCalculateLayout(
-//         m_node, YGUndefined, YGUndefined, YGDirectionLTR);
-// }
-
 double Flexbox::get_computed_left(void) const
 {
     return YGNodeLayoutGetLeft(m_node);
@@ -563,7 +553,6 @@ Dictionary Flexbox::call_measure_func(
     Callable callable = *m_measureFunc;
     if (!callable.is_valid())
     {
-        // GODOT_LOG(2, "Measure call Error: Supplied function reference is invalid! Aborting callback...")
         return Variant();
     }
     Array argument_array = Array();
@@ -580,7 +569,6 @@ void Flexbox::call_dirtied_func(void)
     Callable callable = *m_dirtiedFunc;
     if (!callable.is_valid())
     {
-        // GODOT_LOG(2, "Dirtied Error: Supplied function reference is invalid! Aborting callback...")
         return;
     }
     Array argument_array = Array();

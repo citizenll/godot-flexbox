@@ -58,7 +58,7 @@ func _ready():
 
 func _on_LineEdit_text_changed(originValue, args1, args2 = null):
 	var value
-	var intVal = originValue.to_int()
+	var intVal = originValue.to_float()
 	if args1 == "basis":
 		value = _parse_value(originValue, "auto")
 	else:
@@ -72,11 +72,12 @@ func _on_LineEdit_text_changed(originValue, args1, args2 = null):
 		exportProp[args1] = margins
 	else:
 		exportProp[args1] = value
+	
 	emit_signal("property_changed", exportProp)
 
 
 func _parse_value(value, default = null):
-	var intVal = value.to_int()
+	var intVal = value.to_float()
 	if intVal == 0 and value != "auto":
 		return default
 	elif value == "auto":

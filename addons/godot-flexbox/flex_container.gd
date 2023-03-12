@@ -1,6 +1,10 @@
 @tool
 extends Container
 
+@export var debug_draw = false
+
+var _draw_rects = []
+
 var PropertyList = preload("flex_property.gd")
 
 const EDGES = [1, 2, 3, 0]
@@ -68,12 +72,14 @@ func _notification(what: int) -> void:
 
 
 func _resort() -> void:
+	_draw_rects.clear()
+	var s = Time.get_ticks_usec()
 	var rootSize = get_size()
 	_root.set_width(rootSize.x)
 	_root.set_height(rootSize.y)
-	print("-----------sort-------------")
+	if debug_draw:
+		_draw_debug_rect(Rect2(Vector2.ZERO, rootSize), Color(0, 0.8, 0.5, 1))
 	#
-	var s = Time.get_ticks_usec()
 	var childCount = get_child_count()
 	for i in range(childCount):
 		var c = get_child(i)
@@ -99,7 +105,10 @@ func _resort() -> void:
 			apply_flex_meta(flexbox, flexMetas)
 	#
 	var calc = Time.get_ticks_usec()
+	#print("create time:", calc - s)
 	_root.calculate_layout(NAN, NAN, 1)
+	var calced = Time.get_ticks_usec()
+	#print("calc time:", calced - calc)
 	#
 	for i in range(childCount):
 		var c = get_child(i)
@@ -114,8 +123,12 @@ func _resort() -> void:
 		var size = Vector2(flexbox.get_computed_width(), flexbox.get_computed_height())
 		
 		var rect = Rect2(offset, size)
+		if debug_draw:
+			_draw_debug_rect(rect, Color(1, 0, 0, 0.8))
 		fit_child_in_rect(c, rect)
-	print("-----------sort end-------------")
+	var end = Time.get_ticks_usec()
+	#print("sort time:", end-s, " ", end - calced)
+	queue_redraw()
 
 
 func fit_child_in_rect(child: Control, rect: Rect2) -> void:
@@ -140,10 +153,7 @@ func apply_child_property(node, prop, value):
 			else:
 				node.set_flex_basis(value)
 		"grow":
-			print("setGrow:",value, node.is_dirty())
 			node.set_flex_grow(value)
-			print("getGrow:",node.get_flex_grow(),node.is_dirty())
-			
 		"padding":
 			for i in range(4):
 				var edge = EDGES[i]
@@ -177,6 +187,15 @@ func flex_property_changed(property, value):
 
 func update_layout():
 	queue_sort()
+
+
+func _draw():
+	for r in _draw_rects:
+		draw_rect(r.rect, r.color, false, 2)
+
+
+func _draw_debug_rect(rect, color):
+	_draw_rects.append({rect = rect, color = color})
 
 
 func _get(property):
