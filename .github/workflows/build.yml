@@ -87,3 +87,25 @@ jobs:
           name: ${{ matrix.platform}}
           path: ${{ env.ARTIFACT_FOLDER }}*.${{ matrix.artifact-extension }}
           if-no-files-found: error
+  web:
+    name: Build for Web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update Submodules
+        run: git submodule update --init --recursive
+      - name: Setup emsdk
+        uses: mymindstorm/setup-emsdk@v11
+        with:
+          version: 3.1.18
+          actions-cache-folder: './emsdk'
+      - name: Build binaries
+        run: |
+          mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
+          cd ${{ env.PROJECT_FOLDER }}
+          scons platform=javascript target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin_web
+          path: ./Dev/Godot/addons/effekseer/bin
