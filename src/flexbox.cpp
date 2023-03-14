@@ -26,8 +26,6 @@ static YGSize globalMeasureFunc(
     Variant w = size["width"];
     Variant h = size["height"];
     YGSize ygSize = {static_cast<float>(w), static_cast<float>(h)};
-    // String info = "[measure] width: " + String::num_real(w) + " height: " + String::num_real(h);
-    // GODOT_LOG(0, info);
     return ygSize;
 }
 
@@ -603,7 +601,6 @@ void Flexbox::_bind_methods()
 {
     // ClassDB::bind_static_method("Flexbox", D_METHOD("create"), &Flexbox::create);
     // ClassDB::bind_method(D_METHOD("createWithConfig", &Flexbox::createWithConfig);
-    // GODOT_LOG(0, "Flexbox::_register_methods");
     // register_property<Flexbox, int>("position_type", &Flexbox::set_position_type, &Flexbox::get_position_type, YGPositionTypeStatic);
     ClassDB::bind_static_method("Flexbox", D_METHOD("destroy"), &Flexbox::destroy);
     ClassDB::bind_method(D_METHOD("copy_style"), &Flexbox::copy_style);
