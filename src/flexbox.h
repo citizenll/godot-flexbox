@@ -30,9 +30,6 @@ public:
 public:
     void reset(void);
 
-// private:
-//     Flexbox(YGConfigRef *config);
-
 public:
     void copy_style(Flexbox *other);
     void set_position_type(int positionType);
