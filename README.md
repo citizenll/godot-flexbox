@@ -20,7 +20,7 @@ This is a work in progress. It can be used with basic functionality, and has bee
 
 ## Getting Started
 ### Installation
-- Get the latest release from the Godot Asset Library [here](https://godotengine.org/asset-library/asset/1648)
+- Get the latest release from the Godot Asset Library [here](https://godotengine.org/asset-library/asset/1811)
 - Clone the repository and copy the `addons` folder into your project
 
 ### Usage
