@@ -6,7 +6,7 @@
 #include <godot_cpp/core/binder_common.hpp>
 
 #include <memory>
-#include <yoga/Yoga.h>
+#include "yoga/Yoga.h"
 
 using namespace godot;
 
