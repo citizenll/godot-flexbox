@@ -600,7 +600,6 @@ bool Flexbox::is_dirty(void) const
 void Flexbox::_bind_methods()
 {
     // ClassDB::bind_method(D_METHOD("createWithConfig", &Flexbox::createWithConfig);
-    // register_property<Flexbox, int>("position_type", &Flexbox::set_position_type, &Flexbox::get_position_type, YGPositionTypeStatic);
     ClassDB::bind_static_method("Flexbox", D_METHOD("destroy"), &Flexbox::destroy);
     ClassDB::bind_method(D_METHOD("copy_style"), &Flexbox::copy_style);
     ClassDB::bind_method(D_METHOD("set_position_type"), &Flexbox::set_position_type);

@@ -81,7 +81,7 @@ elif "platform=linux" in sys.argv:
     shutil.copy2("bin/libgdflexbox.x86_64.so", "addons/godot-flexbox/bin/linux/")
 
 elif "platform=web" in sys.argv:
-    subprocess.run("scons platform=web bits=32 target=template_release" + job_opt, shell = True)
+    subprocess.run("scons platform=javascript bits=32 target=template_release" + job_opt, shell = True)
 
     os.makedirs("addons/godot-flexbox/bin/web", exist_ok = True)
 
