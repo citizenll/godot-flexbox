@@ -1,23 +1,15 @@
 [configuration]
-
 entry_symbol = "flexbox_library_init"
 
 [libraries]
-
-macos = "res://addons/godot-flexbox/bin/libgdflexbox.macos.template_debug"
-macos.template_release = "res://addons/godot-flexbox/bin/libgdflexbox.macos.template_release"
-windows.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.windows.template_debug.x86_64.dll"
-windows.template_release.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.windows.template_release.x86_64.dll"
-linux.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.linux.template_debug.x86_64.so"
-linux.template_release.x86_64 = "res://addons/godot-flexbox/bin/libgdflexbox.linux.template_release.x86_64.so"
-android.debug.arm64 = "res://addons/godot-flexbox/bin/libgdflexbox.android.template_debug.arm64.so"
-android.release.arm64 = "res://addons/godot-flexbox/bin/libgdflexbox.android.template_release.arm64.so"
-
-[dependencies]
-
-macos = {}
-macos.template_release = {}
-windows.x86_64 = {}
-windows.template_release.x86_64 = {}
-linux.x86_64 = {}
-linux.template_release.x86_64 = {}
+windows.x86_64 = "res://addons/godot-flexbox/bin/windows/libgdflexbox.x86_64.dll"
+windows.x86_32 = "res://addons/godot-flexbox/bin/windows/libgdflexbox.x86_32.dll"
+linux.x86_32 = "res://addons/godot-flexbox/bin/linux/libgdflexbox.x86_32.so"
+linux.x86_64 = "res://addons/godot-flexbox/bin/linux/libgdflexbox.x86_64.so"
+macos = "res://addons/godot-flexbox/bin/macos/libgdflexbox.dylib"
+ios = "res://addons/godot-flexbox/bin/ios/libgdflexbox.dylib"
+android.arm32 = "res://addons/godot-flexbox/bin/android/libgdflexbox.arm32.so"
+android.arm64 = "res://addons/godot-flexbox/bin/android/libgdflexbox.arm64.so"
+android.x86_32 = "res://addons/godot-flexbox/bin/android/libgdflexbox.x86_32.so"
+android.x86_64 = "res://addons/godot-flexbox/bin/android/libgdflexbox.x86_64.so"
+web = "res://addons/godot-flexbox/bin/web/libgdflexbox.wasm"

@@ -1,92 +1,99 @@
-name: 🌈 All Builds
 on:
   push:
-    branches: [ godot-4.x ]
-    tags:
-      - "v*"
+    branches:
+      - godot-4.x
     paths:
       - '**.h'
-      - '**.cpp'    
-
-# Global Settings
-env:
-  PROJECT_FOLDER: .
-  TARGET_PATH: addons/godot-flexbox/bin/
-  TARGET_NAME: libgdflexbox
-  VAR_PATH: .github/workflows/build_var.json
-
+      - '**.cpp'
 jobs:
-  matrix:
-    name: Generate build matrix
+  linux:
+    name: Build for Linux
     runs-on: ubuntu-latest
-    outputs:
-      matrix-json: ${{ steps.set-matrix.outputs.matrix }}
-
     steps:
       - uses: actions/checkout@v3
-      - id: set-matrix
-        shell: pwsh
-        # Use a small PowerShell script to generate the build matrix
-        run: "& .github/workflows/create-build-matrix.ps1"
-
-  build:
-    needs: [ matrix ]
-    name: ${{ matrix.name }} - ${{ matrix.target == 'template_debug' && 'Debug' || 'Release' }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix: 
-        include: ${{ fromJson(needs.matrix.outputs.matrix-json) }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          lfs: true
-          submodules: recursive
-
-      # Use python 3.x release (works cross platform; best to keep self contained in it's own step)
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
-        with:
-          # Semantic version range syntax or exact version of a Python version
-          python-version: '3.x'
-          # Optional - x64 or x86 architecture, defaults to x64
-          architecture: 'x64'
-
-      # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
-      - name: Configuring Python packages
+      - name: Update Submodules
+        run: git submodule update --init --recursive
+      - name: Build binaries
         run: |
-          python -c "import sys; print(sys.version)"
-          python -m pip install scons ${{ matrix.additional-python-packages }}
-          python --version
-          scons --version
-
-      - name: Windows Compilation
-        if: runner.os == 'Windows'
-        run: |
-          if(-Not (Test-Path -Path ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}))
-          {
-            mkdir ${{ env.PROJECT_FOLDER }}\${{ env.TARGET_PATH }}
-          }
-          cd ${{ env.PROJECT_FOLDER }}
-          scons platform=windows target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
-
-      - name: Not Windows Compilation
-        if: runner.os != 'Windows'
-        run: |
-          mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
-          cd ${{ env.PROJECT_FOLDER }}
-          scons platform=${{ matrix.platform }} target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
-
-      - name: Upload Artifact
-        env:
-          ARTIFACT_FOLDER: ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
+          sudo apt-get update
+          sudo apt-get install scons
+          sudo apt-get install gcc-multilib
+          sudo apt-get install g++-multilib
+          python3 build.py platform=linux
+      - name: Upload binaries
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.platform}}
-          path: ${{ env.ARTIFACT_FOLDER }}*.${{ matrix.artifact-extension }}
-          if-no-files-found: error
+          name: bin_linux
+          path: ./addons/godot-flexbox/bin
+
+  android:
+    name: Build for Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update Submodules
+        run: git submodule update --init --recursive
+      - name: Build binaries
+        run: |
+          sudo apt-get install scons
+          python3 build.py platform=android
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin_android
+          path: ./addons/godot-flexbox/bin
+
+  macos:
+    name: Build for macOS
+    runs-on: macOS-10.15
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update Submodules
+        run: git submodule update --init --recursive
+      - name: Build binaries
+        run: |
+          brew install scons
+          python3 build.py platform=macos
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin_macos
+          path: ./addons/godot-flexbox/bin
+
+  ios:
+    name: Build for iOS
+    runs-on: macOS-10.15
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update Submodules
+        run: git submodule update --init --recursive
+      - name: Build binaries
+        run: |
+          brew install scons
+          python3 build.py platform=ios
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin_ios
+          path: ./addons/godot-flexbox/bin
+
+  windows:
+    name: Build for Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update Submodules
+        run: git submodule update --init --recursive
+      - name: Build binaries
+        run: |
+          python -m pip install scons
+          python build.py platform=windows
+        shell: cmd
+      - name: Upload binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin_windows
+          path: ./addons/godot-flexbox/bin
 
   web:
     name: Build for Web
@@ -95,37 +102,70 @@ jobs:
       - uses: actions/checkout@v3
       - name: Update Submodules
         run: git submodule update --init --recursive
-      - name: Set up Python 3.x
-        uses: actions/setup-python@v4
-        with:
-          # Semantic version range syntax or exact version of a Python version
-          python-version: '3.x'
-          # Optional - x64 or x86 architecture, defaults to x64
-          architecture: 'x64'
-
-      # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
-      - name: Configuring Python packages
-        run: |
-          python -c "import sys; print(sys.version)"
-          python -m pip install scons ${{ matrix.additional-python-packages }}
-          python --version
-          scons --version
-        
       - name: Setup emsdk
-        uses: mymindstorm/setup-emsdk@v11
+        uses: mymindstorm/setup-emsdk@v12
         with:
           version: 3.1.18
           actions-cache-folder: './emsdk'
       - name: Build binaries
         run: |
-          mkdir -v -p ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
-          cd ${{ env.PROJECT_FOLDER }}
-          scons platform=javascript target=${{ matrix.target }} target_path=${{ env.TARGET_PATH }} target_name=${{ env.TARGET_NAME }} -j6 ${{ matrix.flags }}
-      - name: Upload Artifact
-        env:
-          ARTIFACT_FOLDER: ${{ env.PROJECT_FOLDER }}/${{ env.TARGET_PATH }}
+          sudo apt-get install scons
+          python3 build.py platform=web
+      - name: Upload binaries
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.platform}}
-          path: ${{ env.ARTIFACT_FOLDER }}*.${{ matrix.artifact-extension }}
-          if-no-files-found: error
+          name: bin_web
+          path: ./addons/godot-flexbox/bin
+
+  merge:
+    name: Merge 
+    runs-on: ubuntu-latest
+    needs: [linux, android, macos, ios, windows, web]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download Linux binaries
+        uses: actions/download-artifact@v1
+        with:
+          name: bin_linux
+
+      - name: Download Android binaries
+        uses: actions/download-artifact@v1
+        with:
+          name: bin_android
+
+      - name: Download macOS binaries
+        uses: actions/download-artifact@v1
+        with:
+          name: bin_macos
+
+      - name: Download iOS binaries
+        uses: actions/download-artifact@v1
+        with:
+          name: bin_ios
+
+      - name: Download Windows binaries
+        uses: actions/download-artifact@v1
+        with:
+          name: bin_windows
+
+      - name: Download web binaries
+        uses: actions/download-artifact@v1
+        with:
+          name: bin_web
+
+      - name: Copy binaries
+        run: |
+          mkdir ./addons/godot-flexbox/bin
+          cp -r bin_linux/linux ./addons/godot-flexbox/bin/
+          cp -r bin_android/android ./addons/godot-flexbox/bin/
+          cp -r bin_macos/macos ./addons/godot-flexbox/bin/
+          cp -r bin_ios/ios ./addons/godot-flexbox/bin/
+          cp -r bin_windows/windows ./addons/godot-flexbox/bin/
+          cp -r bin_web/web ./addons/godot-flexbox/bin/
+
+      - name: Upload built package
+        uses: actions/upload-artifact@v3
+        with:
+          name: addons
+          path: ./addons
