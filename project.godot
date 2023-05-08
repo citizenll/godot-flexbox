@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Flexbox"
-run/main_scene="res://FlexDemo.tscn"
+run/main_scene="res://demo/FlexDemo.tscn"
 config/features=PackedStringArray("4.1")
 boot_splash/bg_color=Color(0.141176, 0.141176, 0.141176, 1)
 config/icon="res://icon.png"
