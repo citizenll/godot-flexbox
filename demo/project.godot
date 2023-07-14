@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Flexbox"
 run/main_scene="res://FlexDemo.tscn"
-config/features=PackedStringArray("4.0")
+config/features=PackedStringArray("4.1")
 boot_splash/bg_color=Color(0.141176, 0.141176, 0.141176, 1)
 config/icon="res://icon.png"
 
@@ -30,6 +30,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
+renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
 environment/default_environment="res://default_env.tres"

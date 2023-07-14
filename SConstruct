@@ -279,9 +279,9 @@ elif env["platform"] == "windows":
     # MSVC
     env.Append(LINKFLAGS=["/WX"])
     if env["target"] == "debug":
-        env.Append(CCFLAGS=["/Z7", "/Od", "/std:c++17", "/EHsc", "/D_DEBUG", "/MTd"])
+        env.Append(CCFLAGS=["/Z7", "/Od", "/std:c++17", "/EHsc", "/D_DEBUG", "/MTd", "/source-charset:utf-8"])
     elif env["target"] == "release":
-        env.Append(CCFLAGS=["/O2", "/std:c++17", "/EHsc", "/DNDEBUG", "/MT"])
+        env.Append(CCFLAGS=["/O2", "/std:c++17", "/EHsc", "/DNDEBUG", "/MT", "/source-charset:utf-8"])
 
     target_path = "libgdflexbox.x86_" + env["bits"] + ".dll"
     

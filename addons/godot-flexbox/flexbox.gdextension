@@ -1,5 +1,6 @@
 [configuration]
 entry_symbol = "flexbox_library_init"
+compatibility_minimum = 4.1
 
 [libraries]
 windows.x86_64 = "res://addons/godot-flexbox/bin/windows/libgdflexbox.x86_64.dll"
