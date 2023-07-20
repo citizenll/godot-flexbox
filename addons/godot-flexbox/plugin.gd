@@ -16,6 +16,11 @@ var _interface
 const DisplayFlexColumn = preload("assets/DisplayFlexColumn.svg")
 const DisplayFlexRow = preload("assets/DisplayFlexRow.svg")
 const ArrowReverseIcon = preload("assets/ArrowReverseIcon.svg")
+#wrap
+const FlexWrapNoWrapColumnIcon = preload("assets/FlexWrapNoWrapColumnIcon.svg")
+const FlexWrapWrapColumnIcon = preload("assets/FlexWrapWrapColumnIcon.svg")
+const FlexWrapNoWrapRowIcon = preload("assets/FlexWrapNoWrapRowIcon.svg")
+const FlexWrapWrapRowIcon = preload("assets/FlexWrapWrapRowIcon.svg")
 #
 const AlignItemsStartRowIcon = preload("assets/AlignItemsStartRowIcon.svg")
 const AlignItemsCenterRowIcon = preload("assets/AlignItemsCenterRowIcon.svg")
@@ -30,6 +35,14 @@ const JustifyContentSpaceBetweenColumnIcon = preload("assets/JustifyContentSpace
 const JustifyContentSpaceAroundColumnIcon = preload("assets/JustifyContentSpaceAroundColumnIcon.svg")
 const JustifyContentSpaceEvenlyColumnIcon = preload("assets/JustifyContentSpaceEvenlyColumnIcon.svg")
 #
+const AlignContentStartRowIcon = preload("assets/AlignContentStartRowIcon.svg")
+const AlignContentCenterRowIcon = preload("assets/AlignContentCenterRowIcon.svg")
+const AlignContentEndRowIcon = preload("assets/AlignContentEndRowIcon.svg")
+const AlignContentAroundRowIcon = preload("assets/AlignContentAroundRowIcon.svg")
+const AlignContentBetweenRowIcon = preload("assets/AlignContentBetweenRowIcon.svg")
+const AlignContentStretchRowIcon = preload("assets/AlignContentStretchRowIcon.svg")
+
+
 
 func _enter_tree():
 	_inspector_plugin = InspectorPlugin.new()
@@ -230,6 +243,7 @@ class FlexPresetPicker extends EditorPresetPicker:
 
 	const Category = {
 		Direction = "flex_direction",
+		Wrap = "flex_wrap",
 		Align = "align_items",
 		Justify = "justify_content",
 		AlignContent = "align_content",
@@ -258,6 +272,19 @@ class FlexPresetPicker extends EditorPresetPicker:
 		_add_row_button(dir_row, Category.Direction, DirectionPreset.Column, " Column ")
 		_add_separator(dir_row, VSeparator.new());
 		_add_row_button(dir_row, Reverse, DirectionPreset.Reverse, "Reverse");
+
+		#wrap
+		var wrap_row = HBoxContainer.new()
+		wrap_row.set_alignment(HBoxContainer.ALIGNMENT_BEGIN)
+		wrap_row.add_theme_constant_override("separation", grid_separation)
+		main_vb.add_child(wrap_row)
+		var wrap_label = Label.new()
+		wrap_label.set_text("Wrap")
+		wrap_label.custom_minimum_size.x = LABEL_WIDTH
+		wrap_row.add_child(wrap_label)
+		_add_row_button(wrap_row, Category.Wrap, WrapPreset.NoWrap, "NoWrap")
+		_add_row_button(wrap_row, Category.Wrap, WrapPreset.Wrap, "Wrap")
+
 		
 		#align
 		var align_row = HBoxContainer.new()
@@ -306,10 +333,9 @@ class FlexPresetPicker extends EditorPresetPicker:
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.FlexStart, "Start");
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.Center, "Center");
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.FlexEnd, "End");
-		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.Stretch, "Stretch");
-		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.Baseline, "Baseline");
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.SpaceBetween, "SpaceBetween");
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.SpaceAround, "SpaceAround");
+		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.Stretch, "Stretch");
 
 
 
@@ -329,6 +355,9 @@ class FlexPresetPicker extends EditorPresetPicker:
 				preset_buttons[Category.Direction][DirectionPreset.Row].icon = DisplayFlexRow
 				preset_buttons[Reverse][DirectionPreset.Reverse].icon = ArrowReverseIcon
 				#
+				preset_buttons[Category.Wrap][WrapPreset.NoWrap].icon = FlexWrapNoWrapRowIcon
+				preset_buttons[Category.Wrap][WrapPreset.Wrap].icon = FlexWrapWrapRowIcon
+				#
 				preset_buttons[Category.Align][AlignItemsPreset.FlexStart].icon = AlignItemsStartRowIcon
 				preset_buttons[Category.Align][AlignItemsPreset.Center].icon = AlignItemsCenterRowIcon
 				preset_buttons[Category.Align][AlignItemsPreset.FlexEnd].icon = AlignItemsEndRowIcon
@@ -344,4 +373,10 @@ class FlexPresetPicker extends EditorPresetPicker:
 				preset_buttons[Category.Justify][JustifyPreset.SpaceEvenly].icon = JustifyContentSpaceEvenlyColumnIcon
 				#
 
-				preset_buttons[Category.AlignContent][AlignContentPreset.FlexStart].icon = JustifyContentStartColumnIcon
+				preset_buttons[Category.AlignContent][AlignContentPreset.FlexStart].icon = AlignContentStartRowIcon
+				preset_buttons[Category.AlignContent][AlignContentPreset.Center].icon = AlignContentCenterRowIcon
+				preset_buttons[Category.AlignContent][AlignContentPreset.FlexEnd].icon = AlignContentEndRowIcon
+				preset_buttons[Category.AlignContent][AlignContentPreset.SpaceAround].icon = AlignContentAroundRowIcon
+				preset_buttons[Category.AlignContent][AlignContentPreset.SpaceBetween].icon = AlignContentBetweenRowIcon
+				preset_buttons[Category.AlignContent][AlignContentPreset.Stretch].icon = AlignContentStretchRowIcon
+				
