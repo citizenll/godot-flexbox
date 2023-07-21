@@ -212,3 +212,7 @@ func _set(property, value):
 
 func _get_property_list():
 	return _property_list.properties.values()
+
+
+func get_class():
+	return "FlexContainer"
