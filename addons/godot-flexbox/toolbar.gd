@@ -306,34 +306,37 @@ class FlexPresetPicker extends EditorPresetPicker:
 
 	func _notification(what):
 		match what:
-			NOTIFICATION_ENTER_TREE,NOTIFICATION_THEME_CHANGED:
-				#
-				preset_buttons[Category.Direction][DirectionPreset.Row].icon = get_icon("DisplayFlexRow")
-				preset_buttons[Category.Direction][DirectionPreset.Column].icon = get_icon("DisplayFlexColumn")
-				preset_buttons[Category.DirectionReverse][DirectionPreset.Reverse].icon = get_icon("ArrowReverseIcon")
-				#
-				preset_buttons[Category.Wrap][WrapPreset.NoWrap].icon = get_icon("FlexWrapNoWrapRowIcon")
-				preset_buttons[Category.Wrap][WrapPreset.Wrap].icon = get_icon("FlexWrapWrapRowIcon")
-				#
-				preset_buttons[Category.Align][AlignItemsPreset.FlexStart].icon = get_icon("AlignItemsStartRowIcon")
-				preset_buttons[Category.Align][AlignItemsPreset.Center].icon = get_icon("AlignItemsCenterRowIcon")
-				preset_buttons[Category.Align][AlignItemsPreset.FlexEnd].icon = get_icon("AlignItemsEndRowIcon")
-				preset_buttons[Category.Align][AlignItemsPreset.Stretch].icon = get_icon("AlignItemsStretchRowIcon")
-				preset_buttons[Category.Align][AlignItemsPreset.Baseline].icon = get_icon("AlignItemsBaselineRowIcon")
-
-				#
-				preset_buttons[Category.Justify][JustifyPreset.FlexStart].icon = get_icon("JustifyContentStartColumnIcon")
-				preset_buttons[Category.Justify][JustifyPreset.Center].icon = get_icon("JustifyContentCenterColumnIcon")
-				preset_buttons[Category.Justify][JustifyPreset.FlexEnd].icon = get_icon("JustifyContentEndColumnIcon")
-				preset_buttons[Category.Justify][JustifyPreset.SpaceBetween].icon = get_icon("JustifyContentSpaceBetweenColumnIcon")
-				preset_buttons[Category.Justify][JustifyPreset.SpaceAround].icon = get_icon("JustifyContentSpaceAroundColumnIcon")
-				preset_buttons[Category.Justify][JustifyPreset.SpaceEvenly].icon = get_icon("JustifyContentSpaceEvenlyColumnIcon")
-				#
-
-				preset_buttons[Category.AlignContent][AlignContentPreset.FlexStart].icon = get_icon("AlignContentStartRowIcon")
-				preset_buttons[Category.AlignContent][AlignContentPreset.Center].icon = get_icon("AlignContentCenterRowIcon")
-				preset_buttons[Category.AlignContent][AlignContentPreset.FlexEnd].icon = get_icon("AlignContentEndRowIcon")
-				preset_buttons[Category.AlignContent][AlignContentPreset.SpaceAround].icon = get_icon("AlignContentAroundRowIcon")
-				preset_buttons[Category.AlignContent][AlignContentPreset.SpaceBetween].icon = get_icon("AlignContentBetweenRowIcon")
-				preset_buttons[Category.AlignContent][AlignContentPreset.Stretch].icon = get_icon("AlignContentStretchRowIcon")
+			NOTIFICATION_ENTER_TREE:
+				update_icons()
 				
+				
+	func update_icons():
+		await get_tree().process_frame
+		preset_buttons[Category.Direction][DirectionPreset.Row].icon = get_icon("DisplayFlexRow")
+		preset_buttons[Category.Direction][DirectionPreset.Column].icon = get_icon("DisplayFlexColumn")
+		preset_buttons[Category.DirectionReverse][DirectionPreset.Reverse].icon = get_icon("ArrowReverseIcon")
+		#
+		preset_buttons[Category.Wrap][WrapPreset.NoWrap].icon = get_icon("FlexWrapNoWrapRowIcon")
+		preset_buttons[Category.Wrap][WrapPreset.Wrap].icon = get_icon("FlexWrapWrapRowIcon")
+		#
+		preset_buttons[Category.Align][AlignItemsPreset.FlexStart].icon = get_icon("AlignItemsStartRowIcon")
+		preset_buttons[Category.Align][AlignItemsPreset.Center].icon = get_icon("AlignItemsCenterRowIcon")
+		preset_buttons[Category.Align][AlignItemsPreset.FlexEnd].icon = get_icon("AlignItemsEndRowIcon")
+		preset_buttons[Category.Align][AlignItemsPreset.Stretch].icon = get_icon("AlignItemsStretchRowIcon")
+		preset_buttons[Category.Align][AlignItemsPreset.Baseline].icon = get_icon("AlignItemsBaselineRowIcon")
+
+		#
+		preset_buttons[Category.Justify][JustifyPreset.FlexStart].icon = get_icon("JustifyContentStartColumnIcon")
+		preset_buttons[Category.Justify][JustifyPreset.Center].icon = get_icon("JustifyContentCenterColumnIcon")
+		preset_buttons[Category.Justify][JustifyPreset.FlexEnd].icon = get_icon("JustifyContentEndColumnIcon")
+		preset_buttons[Category.Justify][JustifyPreset.SpaceBetween].icon = get_icon("JustifyContentSpaceBetweenColumnIcon")
+		preset_buttons[Category.Justify][JustifyPreset.SpaceAround].icon = get_icon("JustifyContentSpaceAroundColumnIcon")
+		preset_buttons[Category.Justify][JustifyPreset.SpaceEvenly].icon = get_icon("JustifyContentSpaceEvenlyColumnIcon")
+		#
+
+		preset_buttons[Category.AlignContent][AlignContentPreset.FlexStart].icon = get_icon("AlignContentStartRowIcon")
+		preset_buttons[Category.AlignContent][AlignContentPreset.Center].icon = get_icon("AlignContentCenterRowIcon")
+		preset_buttons[Category.AlignContent][AlignContentPreset.FlexEnd].icon = get_icon("AlignContentEndRowIcon")
+		preset_buttons[Category.AlignContent][AlignContentPreset.SpaceAround].icon = get_icon("AlignContentAroundRowIcon")
+		preset_buttons[Category.AlignContent][AlignContentPreset.SpaceBetween].icon = get_icon("AlignContentBetweenRowIcon")
+		preset_buttons[Category.AlignContent][AlignContentPreset.Stretch].icon = get_icon("AlignContentStretchRowIcon")

@@ -14,11 +14,11 @@ var _toolbar:EditorToolbar
 var _interface
 
 func _enter_tree():
-	IconAssets.generate_icons()
+	IconAssets.generate_icons(is_dark_theme())
 	_inspector_plugin = InspectorPlugin.new()
 	add_custom_type("FlexContainer", "Container", FlexContainer, Icon)
 	add_inspector_plugin(_inspector_plugin)
-	
+	get_window().theme_changed.connect(_theme_changed)
 	create_toolbar()
 
 
@@ -36,3 +36,16 @@ func create_toolbar():
 	_toolbar.plugin = self
 	_toolbar.hide()
 	add_control_to_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, _toolbar)
+
+
+func is_dark_theme():
+	var settings = get_editor_interface().get_editor_settings() as EditorSettings
+	var AUTO_COLOR = 0;
+	var LIGHT_COLOR = 2;
+	var base_color = settings.get("interface/theme/base_color");
+	var icon_font_color_setting = settings.get("interface/theme/icon_and_font_color");
+	return (icon_font_color_setting == AUTO_COLOR && base_color.get_luminance() < 0.5) || icon_font_color_setting == LIGHT_COLOR;
+
+
+func _theme_changed():
+	IconAssets.generate_icons(is_dark_theme())
