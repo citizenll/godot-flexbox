@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvs4qsfsqpvdo"
-path="res://.godot/imported/JustifyContentSpaceBetweenRowReverseIcon.svg-d7a3208a194514253bc91e84018da0ba.ctex"
+uid="uid://buai0bv8miqrx"
+path="res://.godot/imported/AlignContentEndColumnIcon.svg-05770fba0491527fd1aa0f93463055f7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/godot-flexbox/assets/light/JustifyContentSpaceBetweenRowReverseIcon.svg"
-dest_files=["res://.godot/imported/JustifyContentSpaceBetweenRowReverseIcon.svg-d7a3208a194514253bc91e84018da0ba.ctex"]
+source_file="res://addons/godot-flexbox/assets/dark/AlignContentEndColumnIcon.svg"
+dest_files=["res://.godot/imported/AlignContentEndColumnIcon.svg-05770fba0491527fd1aa0f93463055f7.ctex"]
 
 [params]
 

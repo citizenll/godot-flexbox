@@ -28,12 +28,12 @@ func _exit_tree():
 	remove_control_from_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, _toolbar)
 	_inspector_plugin = null
 	_toolbar = null
-	IconAssets.icons_map = null
 
 
 func create_toolbar():
 	_toolbar = EditorToolbar.new()
 	_toolbar.plugin = self
+	_toolbar.undo_redo = get_undo_redo()
 	_toolbar.hide()
 	add_control_to_container(EditorPlugin.CONTAINER_CANVAS_EDITOR_MENU, _toolbar)
 

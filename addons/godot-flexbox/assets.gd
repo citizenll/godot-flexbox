@@ -6,11 +6,17 @@ static var color_conversion_map = {}
 
 const flex_icons_sources = [
 	"AlignContentAroundRowIcon",
+	"AlignContentAroundColumnIcon",
 	"AlignContentBetweenRowIcon",
+	"AlignContentBetweenColumnIcon",
 	"AlignContentCenterRowIcon",
+	"AlignContentCenterColumnIcon",
 	"AlignContentEndRowIcon",
+	"AlignContentEndColumnIcon",
 	"AlignContentStartRowIcon",
+	"AlignContentStartColumnIcon",
 	"AlignContentStretchRowIcon",
+	"AlignContentStretchColumnIcon",
 
 	"AlignItemsBaselineColumnIcon",
 	"AlignItemsBaselineRowIcon",
@@ -39,7 +45,7 @@ const flex_icons_sources = [
 	"JustifyContentSpaceAroundColumnIcon",
 	"JustifyContentSpaceAroundRowIcon",
 	"JustifyContentSpaceBetweenColumnIcon",
-	"JustifyContentSpaceBetweenRowReverseIcon",
+	"JustifyContentSpaceBetweenRowIcon",
 	"JustifyContentSpaceEvenlyColumnIcon",
 	"JustifyContentSpaceEvenlyRowIcon",
 	"JustifyContentStartColumnIcon",
@@ -55,6 +61,7 @@ static func generate_icons(dark_theme):
 	if icons_map == null:
 		icons_map = {}
 	if icons_map.has(dark_theme):
+		current_theme = dark_theme
 		return
 	if current_theme != dark_theme:
 		current_theme = dark_theme

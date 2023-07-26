@@ -3,6 +3,22 @@ extends HBoxContainer
 
 const Icon = preload("icon.svg")
 
+enum DirectionPreset {
+	Column,ColumnReverse,Row,RowReverse,Reverse
+}
+enum WrapPreset {
+	NoWrap,Wrap,WrapReverse
+}
+enum AlignContentPreset {
+	Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround
+}
+enum JustifyPreset {
+	FlexStart,Center,FlexEnd,SpaceBetween,SpaceAround,SpaceEvenly
+}
+enum AlignItemsPreset {
+	Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround
+}
+
 var plugin:EditorPlugin
 var presets_button: EditorPopupButton
 
@@ -10,6 +26,13 @@ var container_h_picker
 var container_v_picker
 
 var presets = {}
+var _current_node:FlexContainer
+var _selection:EditorSelection
+var undo_redo:EditorUndoRedoManager
+var flex_picker:FlexPresetPicker
+
+
+enum Good {Foo, Bar}
 
 func _init():
 	add_child(VSeparator.new())
@@ -23,7 +46,7 @@ func _init():
 	var presets_label = Label.new()
 	presets_label.text = "Flexbox Presets"
 	presets_button.get_popup_hbox().add_child(presets_label)
-	var flex_picker = FlexPresetPicker.new()
+	flex_picker = FlexPresetPicker.new()
 	flex_picker.set_h_size_flags(SIZE_SHRINK_CENTER);
 	presets_button.get_popup_hbox().add_child(flex_picker)
 	flex_picker.flexbox_preset_selected.connect(_flexbox_preset_selected)
@@ -32,26 +55,48 @@ func _init():
 
 
 func _ready():
-	var selection = plugin.get_editor_interface().get_selection()
-	selection.selection_changed.connect(_selection_changed.bind(selection))
+	_selection = plugin.get_editor_interface().get_selection()
+	_selection.selection_changed.connect(_selection_changed)
+	_selection_changed()
 
 
-func _selection_changed(selection:EditorSelection):
-	var has_flexcontainers = false
-	var nodes = selection.get_selected_nodes()
-	for node in nodes:
-		if node.get_class() == "FlexContainer":
-			has_flexcontainers = true
-			break
-	set_visible(has_flexcontainers)
+func _exit_tree():
+	_selection.selection_changed.disconnect(_selection_changed)
+
+
+func _selection_changed():
+	var nodes = _selection.get_selected_nodes()
+	if nodes.size()<=0: return
+	
+	var node = nodes[0]
+	if node is FlexContainer:
+		_current_node =node
+		set_visible(true)
+		flex_picker.map_state(_current_node.state)
+	else:
+		_current_node = null
+		set_visible(false)
 
 
 func _flexbox_preset_selected(p_category, p_preset, p_state):
 	var old_preset = presets.get(p_category, null)
-	presets[p_category] = p_preset if p_state else -1
-	if old_preset != presets[p_category]:
-		print("need update:",p_category)
-	print("preset_selected:", presets)
+	#flex direction reverse
+	if p_category == "reverse":
+		p_category = "flex_direction"
+		old_preset = presets.get(p_category, null)
+		if p_state:
+			var is_row = old_preset == DirectionPreset.Row or old_preset == DirectionPreset.RowReverse
+			p_preset = DirectionPreset.RowReverse if is_row else DirectionPreset.ColumnReverse
+		else:#reverse
+			p_preset = DirectionPreset.Row if old_preset == DirectionPreset.RowReverse else DirectionPreset.Column
+		presets[p_category] = p_preset
+	else:
+		presets[p_category] = p_preset if p_state else -1
+	
+	undo_redo.create_action(p_category)
+	undo_redo.add_do_method(_current_node, "edit_set_state", presets)
+	undo_redo.add_undo_method(_current_node, "edit_set_state", _current_node.edit_get_state())
+	undo_redo.commit_action()
 
 
 func _notification(what):
@@ -162,29 +207,11 @@ class EditorPresetPicker extends MarginContainer:
 class FlexPresetPicker extends EditorPresetPicker:
 	signal flexbox_preset_selected
 
-	enum DirectionPreset {
-		Column,ColumnReverse,Row,RowReverse,Reverse
-	}
-
-	enum WrapPreset {
-		NoWrap,Wrap,WrapReverse
-	}
-
-	enum AlignContentPreset {
-		Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround
-	}
-
-	enum JustifyPreset {
-		FlexStart,Center,FlexEnd,SpaceBetween,SpaceAround,SpaceEvenly
-	}
-
-	enum AlignItemsPreset {
-		Auto,FlexStart,Center,FlexEnd,Stretch,Baseline,SpaceBetween,SpaceAround
-	}
+	var state:Dictionary
 
 	const Category = {
-		DirectionReverse = "reverse",
 		Direction = "flex_direction",
+		DirectionReverse = "reverse",
 		Wrap = "flex_wrap",
 		Align = "align_items",
 		Justify = "justify_content",
@@ -224,7 +251,6 @@ class FlexPresetPicker extends EditorPresetPicker:
 		wrap_row.add_child(wrap_label)
 		_add_row_button(wrap_row, Category.Wrap, WrapPreset.NoWrap, "NoWrap")
 		_add_row_button(wrap_row, Category.Wrap, WrapPreset.Wrap, "Wrap")
-
 		
 		#align
 		var align_row = HBoxContainer.new()
@@ -277,14 +303,42 @@ class FlexPresetPicker extends EditorPresetPicker:
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.SpaceAround, "SpaceAround");
 		_add_row_button(content_row, Category.AlignContent, AlignContentPreset.Stretch, "Stretch");
 		
-		select_default()
-	
+
+	func map_state(p_state):
+		state = p_state
+		#reset all
+		for cat in preset_buttons:
+			var cat_btns = preset_buttons[cat]
+			for btn in cat_btns.values():
+				btn.button_pressed = false
+		#
+		for category in p_state:
+			var value = p_state[category]
+			if category == Category.Direction:
+				var is_reverse = value == DirectionPreset.RowReverse or value == DirectionPreset.ColumnReverse
+				if value == DirectionPreset.Row or value == DirectionPreset.RowReverse:
+					preset_buttons[Category.Direction][DirectionPreset.Row].button_pressed = true
+				else:
+					preset_buttons[Category.Direction][DirectionPreset.Column].button_pressed = true
+				preset_buttons[Category.DirectionReverse][DirectionPreset.Reverse].button_pressed = is_reverse
+			else:
+				preset_buttons[category][value].button_pressed = true
+		update_icons()
+
+	func is_reverse():
+		var direction = state[Category.Direction]
+		return direction == DirectionPreset.ColumnReverse or direction == DirectionPreset.RowReverse
+
+	func is_row():
+		var direction = state[Category.Direction]
+		return direction == DirectionPreset.RowReverse or direction == DirectionPreset.Row
 
 	func get_icon(icon):
 		return IconAssets.get_icon(icon)
 
 
 	func _preset_button_pressed(p_category, p_preset):
+		var update_icon = false
 		var select_btn = preset_buttons[p_category][p_preset]
 		for b in preset_buttons[p_category].values():
 			if b == select_btn:
@@ -296,47 +350,51 @@ class FlexPresetPicker extends EditorPresetPicker:
 			var column_selected = preset_buttons[Category.Direction][DirectionPreset.Column].button_pressed
 			if !row_selected && !column_selected:
 				select_btn.button_pressed = true
+			update_icon = true
+		elif p_category == "reverse":
+			update_icon = true
 		
 		flexbox_preset_selected.emit(p_category, p_preset, select_btn.button_pressed)
-
-
-	func select_default():
-		preset_buttons[Category.Direction][DirectionPreset.Row].button_pressed = true
+		if update_icon:
+			update_icons()
 
 
 	func _notification(what):
 		match what:
-			NOTIFICATION_ENTER_TREE:
+			NOTIFICATION_ENTER_TREE,NOTIFICATION_THEME_CHANGED:
 				update_icons()
-				
-				
+
+
 	func update_icons():
 		await get_tree().process_frame
+		var direction =  "Row" if is_row() else "Column"
+		var reverse = is_reverse()
+
 		preset_buttons[Category.Direction][DirectionPreset.Row].icon = get_icon("DisplayFlexRow")
 		preset_buttons[Category.Direction][DirectionPreset.Column].icon = get_icon("DisplayFlexColumn")
 		preset_buttons[Category.DirectionReverse][DirectionPreset.Reverse].icon = get_icon("ArrowReverseIcon")
 		#
-		preset_buttons[Category.Wrap][WrapPreset.NoWrap].icon = get_icon("FlexWrapNoWrapRowIcon")
-		preset_buttons[Category.Wrap][WrapPreset.Wrap].icon = get_icon("FlexWrapWrapRowIcon")
+		preset_buttons[Category.Wrap][WrapPreset.NoWrap].icon = get_icon("FlexWrapNoWrap%sIcon" % direction)
+		preset_buttons[Category.Wrap][WrapPreset.Wrap].icon = get_icon("FlexWrapWrap%sIcon" % direction)
 		#
-		preset_buttons[Category.Align][AlignItemsPreset.FlexStart].icon = get_icon("AlignItemsStartRowIcon")
-		preset_buttons[Category.Align][AlignItemsPreset.Center].icon = get_icon("AlignItemsCenterRowIcon")
-		preset_buttons[Category.Align][AlignItemsPreset.FlexEnd].icon = get_icon("AlignItemsEndRowIcon")
-		preset_buttons[Category.Align][AlignItemsPreset.Stretch].icon = get_icon("AlignItemsStretchRowIcon")
-		preset_buttons[Category.Align][AlignItemsPreset.Baseline].icon = get_icon("AlignItemsBaselineRowIcon")
-
+		preset_buttons[Category.Align][AlignItemsPreset.FlexStart].icon = get_icon("AlignItemsStart%sIcon" % direction)
+		preset_buttons[Category.Align][AlignItemsPreset.Center].icon = get_icon("AlignItemsCenter%sIcon" % direction)
+		preset_buttons[Category.Align][AlignItemsPreset.FlexEnd].icon = get_icon("AlignItemsEnd%sIcon" % direction)
+		preset_buttons[Category.Align][AlignItemsPreset.Stretch].icon = get_icon("AlignItemsStretch%sIcon" % direction)
+		preset_buttons[Category.Align][AlignItemsPreset.Baseline].icon = get_icon("AlignItemsBaseline%sIcon" % direction)
 		#
-		preset_buttons[Category.Justify][JustifyPreset.FlexStart].icon = get_icon("JustifyContentStartColumnIcon")
-		preset_buttons[Category.Justify][JustifyPreset.Center].icon = get_icon("JustifyContentCenterColumnIcon")
-		preset_buttons[Category.Justify][JustifyPreset.FlexEnd].icon = get_icon("JustifyContentEndColumnIcon")
-		preset_buttons[Category.Justify][JustifyPreset.SpaceBetween].icon = get_icon("JustifyContentSpaceBetweenColumnIcon")
-		preset_buttons[Category.Justify][JustifyPreset.SpaceAround].icon = get_icon("JustifyContentSpaceAroundColumnIcon")
-		preset_buttons[Category.Justify][JustifyPreset.SpaceEvenly].icon = get_icon("JustifyContentSpaceEvenlyColumnIcon")
+		var justify_content_start_icon = get_icon("JustifyContentStart%sIcon" % direction)
+		var justify_content_end_icon = get_icon("JustifyContentEnd%sIcon" % direction)
+		preset_buttons[Category.Justify][JustifyPreset.Center].icon = get_icon("JustifyContentCenter%sIcon" % direction)
+		preset_buttons[Category.Justify][JustifyPreset.FlexStart].icon = justify_content_end_icon if reverse else justify_content_start_icon
+		preset_buttons[Category.Justify][JustifyPreset.FlexEnd].icon =justify_content_start_icon if reverse else justify_content_end_icon
+		preset_buttons[Category.Justify][JustifyPreset.SpaceBetween].icon = get_icon("JustifyContentSpaceBetween%sIcon" % direction)
+		preset_buttons[Category.Justify][JustifyPreset.SpaceAround].icon = get_icon("JustifyContentSpaceAround%sIcon" % direction)
+		preset_buttons[Category.Justify][JustifyPreset.SpaceEvenly].icon = get_icon("JustifyContentSpaceEvenly%sIcon" % direction)
 		#
-
-		preset_buttons[Category.AlignContent][AlignContentPreset.FlexStart].icon = get_icon("AlignContentStartRowIcon")
-		preset_buttons[Category.AlignContent][AlignContentPreset.Center].icon = get_icon("AlignContentCenterRowIcon")
-		preset_buttons[Category.AlignContent][AlignContentPreset.FlexEnd].icon = get_icon("AlignContentEndRowIcon")
-		preset_buttons[Category.AlignContent][AlignContentPreset.SpaceAround].icon = get_icon("AlignContentAroundRowIcon")
-		preset_buttons[Category.AlignContent][AlignContentPreset.SpaceBetween].icon = get_icon("AlignContentBetweenRowIcon")
-		preset_buttons[Category.AlignContent][AlignContentPreset.Stretch].icon = get_icon("AlignContentStretchRowIcon")
+		preset_buttons[Category.AlignContent][AlignContentPreset.FlexStart].icon = get_icon("AlignContentStart%sIcon" % direction)
+		preset_buttons[Category.AlignContent][AlignContentPreset.Center].icon = get_icon("AlignContentCenter%sIcon" % direction)
+		preset_buttons[Category.AlignContent][AlignContentPreset.FlexEnd].icon = get_icon("AlignContentEnd%sIcon" % direction)
+		preset_buttons[Category.AlignContent][AlignContentPreset.SpaceAround].icon = get_icon("AlignContentAround%sIcon" % direction)
+		preset_buttons[Category.AlignContent][AlignContentPreset.SpaceBetween].icon = get_icon("AlignContentBetween%sIcon" % direction)
+		preset_buttons[Category.AlignContent][AlignContentPreset.Stretch].icon = get_icon("AlignContentStretch%sIcon" % direction)
