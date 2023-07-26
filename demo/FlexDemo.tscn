@@ -29,12 +29,10 @@ align_items = 2
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 color = Color(0, 0.796078, 0.486275, 1)
-metadata/_flex_child = 1
-metadata/_flex_metas = {
+metadata/flex_metas = {
 "align_self": 0,
-"grow": 0.3,
-"margin": [0, 10.0, 0, 0],
-"shrink": 1.0
+"grow": 1.0,
+"margin": [0.0, 0, 0.0, 0]
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect1"]
@@ -51,8 +49,8 @@ text = "1"
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 color = Color(0.952941, 0.329412, 0.329412, 1)
-metadata/_flex_child = 1
-metadata/_flex_metas = {
+metadata/flex_metas = {
+"align_self": 1,
 "margin": [10.0, 10.0, 0, 0]
 }
 
@@ -66,7 +64,6 @@ text = "2"
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 color = Color(0.431373, 0.764706, 0.419608, 1)
-metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect3"]
 layout_mode = 0
@@ -80,7 +77,6 @@ text = "3"
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 color = Color(0.470588, 0.498039, 0.952941, 1)
-metadata/_flex_child = 1
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect4"]
 layout_mode = 0

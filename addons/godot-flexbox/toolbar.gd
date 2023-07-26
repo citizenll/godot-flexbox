@@ -32,8 +32,6 @@ var undo_redo:EditorUndoRedoManager
 var flex_picker:FlexPresetPicker
 
 
-enum Good {Foo, Bar}
-
 func _init():
 	add_child(VSeparator.new())
 
@@ -66,7 +64,9 @@ func _exit_tree():
 
 func _selection_changed():
 	var nodes = _selection.get_selected_nodes()
-	if nodes.size()<=0: return
+	if nodes.size()<=0:
+		_current_node = null
+		return
 	
 	var node = nodes[0]
 	if node is FlexContainer:
@@ -362,6 +362,7 @@ class FlexPresetPicker extends EditorPresetPicker:
 	func _notification(what):
 		match what:
 			NOTIFICATION_ENTER_TREE,NOTIFICATION_THEME_CHANGED:
+				if state.is_empty(): return
 				update_icons()
 
 

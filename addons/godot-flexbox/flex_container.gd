@@ -6,8 +6,6 @@ extends Container
 
 var _draw_rects = []
 
-var PropertyList = preload("flex_property.gd")
-
 const EDGES = [1, 2, 3, 0]
 
 enum FlexDirection {Column,ColumnReverse,Row,RowReverse}
@@ -85,7 +83,6 @@ func _resort() -> void:
 			continue
 		if not c or not c.is_visible_in_tree():
 			continue
-		c.set_meta("_flex_child", 1)
 
 		var cid = c.get_instance_id()
 		var flexbox = _flex_cache.get(cid)
@@ -100,15 +97,13 @@ func _resort() -> void:
 		flexbox.set_min_width(size.x)
 		flexbox.set_min_height(size.y)
 		#
-		var flexMetas = c.get_meta("_flex_metas", -1)
-		if typeof(flexMetas) == TYPE_DICTIONARY and flexMetas.size():
-			apply_flex_meta(flexbox, flexMetas)
+		var flex_metas = c.get_meta("flex_metas", {})
+		if flex_metas.size():
+			apply_flex_meta(flexbox, flex_metas)
 	#
 	var calc = Time.get_ticks_usec()
-	#print("create time:", calc - s)
 	_root.calculate_layout(NAN, NAN, 1)
 	var calced = Time.get_ticks_usec()
-	#print("calc time:", calced - calc)
 	#
 	for i in range(childCount):
 		var c = get_child(i)
@@ -127,7 +122,6 @@ func _resort() -> void:
 			_draw_debug_rect(rect, Color(1, 0, 0, 0.8))
 		fit_child_in_rect(c, rect)
 	var end = Time.get_ticks_usec()
-	#print("sort time:", end-s, " ", end - calced)
 	queue_redraw()
 
 
