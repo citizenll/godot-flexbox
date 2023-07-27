@@ -13,7 +13,7 @@ Godot4.1 New Version Support, Enhanced User Experience, Just Like Native Compone
 
 ## Work in Progress 🧑‍💻
 🎉 Support 4.1 now !
-✔️ Godot 4.0 version find [here](https://github.com/citizenll/godot-flexbox/tree/main)
+✔️ Godot 4.0 version find [here](https://github.com/citizenll/godot-flexbox/tree/4.0)
 ✔️ Godot 3.5 version find [here](https://github.com/citizenll/godot-flexbox/tree/main)
 
 This is a work in progress. It can be used with basic functionality, and has been tested on Windows and Android.
