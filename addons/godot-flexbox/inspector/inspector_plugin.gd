@@ -13,7 +13,7 @@ func _parse_begin(object):
 	properties = object.get_meta("flex_metas", {})
 
 	var align_self = EditorPropertyEnum.new()
-	align_self.setup(properties.get("align_self"))
+	align_self.setup(properties.get("align_self", 0))
 	var grow = EditorPropertyNumber.new()
 	grow.setup("Flex Grow", properties.get("grow", 0))
 	var shrink = EditorPropertyNumber.new()
@@ -89,6 +89,7 @@ class EditorPropertyEnum extends EditorProperty:
 	func _init():
 		label = "Align Self"
 		options = OptionButton.new()
+		options.auto_translate = false
 		options.set_clip_text(true)
 		options.set_flat(true)
 		add_child(options)

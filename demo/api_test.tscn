@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3ooljt4sjxsd"]
+
+[ext_resource type="Script" path="res://api_test.gd" id="1_0rrja"]
+[ext_resource type="Script" path="res://addons/godot-flexbox/flex_container.gd" id="2_51528"]
+
+[node name="root" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0rrja")
+
+[node name="ChilContainer" type="Container" parent="."]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 0
+script = ExtResource("2_51528")
+debug_draw = true
+justify_content = 1
+align_items = 2
+metadata/_flex_child = 1
+metadata/_flex_metas = {
+"grow": 1.0
+}
+
+[node name="ColorRect1" type="ColorRect" parent="ChilContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+metadata/flex_metas = {
+"align_self": 1
+}
+
+[node name="ColorRect2" type="ColorRect" parent="ChilContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+
+[node name="ColorRect3" type="ColorRect" parent="ChilContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+metadata/flex_metas = {
+"align_self": 3
+}

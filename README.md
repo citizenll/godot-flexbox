@@ -8,8 +8,12 @@
     Flexbox layout for Godot Engine 
 </p>
 
+## New version2.0!
+Godot4.1 New Version Support, Enhanced User Experience, Just Like Native Components.
+
 ## Work in Progress 🧑‍💻
-🎉 Support 4.0 now !
+🎉 Support 4.1 now !
+✔️ Godot 4.0 version find [here](https://github.com/citizenll/godot-flexbox/tree/main)
 ✔️ Godot 3.5 version find [here](https://github.com/citizenll/godot-flexbox/tree/main)
 
 This is a work in progress. It can be used with basic functionality, and has been tested on Windows and Android.

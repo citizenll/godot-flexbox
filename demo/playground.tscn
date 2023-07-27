@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dhvh3x81ere1s"]
 
 [ext_resource type="Script" path="res://addons/godot-flexbox/flex_container.gd" id="1"]
-[ext_resource type="Script" path="res://FlexDemo.gd" id="1_8a2fn"]
+[ext_resource type="Script" path="res://playground.gd" id="1_8a2fn"]
 
 [node name="FlexDemo" type="Control"]
 layout_mode = 3
@@ -13,7 +13,6 @@ grow_vertical = 2
 script = ExtResource("1_8a2fn")
 
 [node name="FlexContainer" type="Container" parent="."]
-modulate = Color(1, 1, 1, 0.0901961)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,9 +20,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
-flex_direction = 1
-justify_content = 1
-align_items = 2
 
 [node name="ColorRect1" type="ColorRect" parent="FlexContainer"]
 custom_minimum_size = Vector2(100, 100)
@@ -31,7 +27,7 @@ layout_mode = 2
 color = Color(0, 0.796078, 0.486275, 1)
 metadata/flex_metas = {
 "align_self": 0,
-"grow": 1.0,
+"grow": 0.0,
 "margin": [0.0, 0, 0.0, 0]
 }
 
@@ -50,8 +46,8 @@ custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 color = Color(0.952941, 0.329412, 0.329412, 1)
 metadata/flex_metas = {
-"align_self": 1,
-"margin": [10.0, 10.0, 0, 0]
+"align_self": 0,
+"margin": [0.0, 10.0, 0, 10.0]
 }
 
 [node name="Label" type="Label" parent="FlexContainer/ColorRect2"]

@@ -174,6 +174,7 @@ class EditorPresetPicker extends MarginContainer:
 
 	func _add_row_button(p_row, p_category, p_preset, p_name):
 		var b = Button.new()
+		b.auto_translate = false
 		b.toggle_mode = true
 		b.set_custom_minimum_size(Vector2(36, 36))
 		b.set_icon_alignment(HORIZONTAL_ALIGNMENT_CENTER)
