@@ -45,7 +45,7 @@ jobs:
 
   macos:
     name: Build for macOS
-    runs-on: macOS-10.15
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
       - name: Update Submodules
@@ -62,7 +62,7 @@ jobs:
 
   ios:
     name: Build for iOS
-    runs-on: macOS-10.15
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
       - name: Update Submodules
