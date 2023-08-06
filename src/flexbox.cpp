@@ -35,27 +35,7 @@ static void globalDirtiedFunc(YGNodeRef nodeRef)
 
     node.call_dirtied_func();
 }
-/* static */
-// Flexbox *Flexbox::create()
-// {
-//     return new Flexbox(nullptr);
-// }
-// /* static */
-// Flexbox *Flexbox::createWithConfig(YGConfigRef *config)
-// {
-//     return new Flexbox(config);
-// }
 
-// Flexbox::Flexbox(YGConfigRef *config)
-//     : m_node(
-//           config != nullptr ? YGNodeNewWithConfig(*config)
-//                             : YGNodeNew()),
-//       m_measureFunc(nullptr),
-//       m_dirtiedFunc(nullptr)
-// {
-//     YGNodeSetContext(m_node, reinterpret_cast<void *>(this));
-// }
-//
 Flexbox::Flexbox()
 {
     m_node = YGNodeNew();
