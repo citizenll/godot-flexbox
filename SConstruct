@@ -117,6 +117,12 @@ opts.Add(EnumVariable(
     ["armv7","arm64v8","x86","x86_64"]
 ))
 opts.Add(EnumVariable(
+    "arch",
+    "Target MacOS architecture",
+    "arm64",
+    ["arm64", "x86_64"]
+))
+opts.Add(EnumVariable(
     "ios_arch",
     "Target iOS architecture",
     "arm64",
@@ -231,7 +237,7 @@ elif env["platform"] == "macos":
     if env["target"] == "debug":
         env.Append(CCFLAGS=["-Og", "-g"])
     elif env["target"] == "release":
-        env.Append(CCFLAGS=["-Ofast"])
+        env.Append(CCFLAGS=["-Ofast", "-Os"])
 
     target_path = "libgdflexbox.dylib"
 
