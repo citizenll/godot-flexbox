@@ -115,6 +115,8 @@ public: // Style getters
 public: // Tree hierarchy mutators
     void insert_child(Flexbox *child, unsigned index);
     void remove_child(Flexbox *child);
+    void remove_all_children(void);
+    void swap_child(Flexbox *child, unsigned index);
 
 public: // Tree hierarchy inspectors
     unsigned get_child_count(void) const;

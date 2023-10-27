@@ -403,6 +403,16 @@ void Flexbox::remove_child(Flexbox *child)
     YGNodeRemoveChild(m_node, child->m_node);
 }
 
+void Flexbox::remove_all_children(void)
+{
+    YGNodeRemoveAllChildren(m_node);
+}
+
+void Flexbox::swap_child(Flexbox *child, unsigned index)
+{
+    YGNodeSwapChild(m_node, child->m_node, index);
+}
+
 unsigned Flexbox::get_child_count(void) const
 {
     return YGNodeGetChildCount(m_node);
@@ -658,6 +668,8 @@ void Flexbox::_bind_methods()
 
     ClassDB::bind_method(D_METHOD("insert_child"), &Flexbox::insert_child);
     ClassDB::bind_method(D_METHOD("remove_child"), &Flexbox::remove_child);
+    ClassDB::bind_method(D_METHOD("remove_all_children"), &Flexbox::remove_all_children);
+    ClassDB::bind_method(D_METHOD("swap_child"), &Flexbox::swap_child);
     ClassDB::bind_method(D_METHOD("get_child_count"), &Flexbox::get_child_count);
     ClassDB::bind_method(D_METHOD("get_child"), &Flexbox::get_child);
 
