@@ -115,8 +115,11 @@ func _resort() -> void:
 			_flex_list.insert(valid_child_index, [cid, flexbox, c])
 #			print("Add: ", valid_child_index)
 			
-#		print(flexbox.get_instance_id(), ", ", _root.get_child_count())
 		_set_control_min_size(c, flexbox)
+		var flex_metas = c.get_meta("flex_metas", {})
+		if flex_metas.size():
+			apply_flex_meta(flexbox, flex_metas)
+		
 		valid_child_index += 1
 	
 	child_count = valid_child_index
