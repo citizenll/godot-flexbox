@@ -2,6 +2,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include "yoga/YGNode.h"
 
 using namespace godot;
 //
@@ -403,14 +404,49 @@ void Flexbox::remove_child(Flexbox *child)
     YGNodeRemoveChild(m_node, child->m_node);
 }
 
+void Flexbox::remove_child_at(unsigned index)
+{
+    if (YGNodeGetChildCount(m_node) < index) {
+        // This is an empty set. Nothing to remove.
+        return;
+    }
+
+    // Children may be shared between parents, which is indicated by not having an
+    // owner. We only want to reset the child completely if it is owned
+    // exclusively by one node.
+    auto childNode = m_node->getChild(index);
+    auto childOwner = childNode->getOwner();
+    m_node->removeChild(index);
+    if (m_node == childOwner) {
+        childNode->setLayout({}); // layout is no longer valid
+        childNode->setOwner(nullptr);
+    }
+    m_node->markDirtyAndPropogate();
+}
+
 void Flexbox::remove_all_children(void)
 {
     YGNodeRemoveAllChildren(m_node);
 }
 
-void Flexbox::swap_child(Flexbox *child, unsigned index)
+void Flexbox::replace_child(Flexbox *child, Flexbox *target)
+{
+    m_node->replaceChild(child->m_node, target->m_node);
+    child->m_node->setOwner(m_node);
+}
+
+void Flexbox::replace_child_at(Flexbox *child, unsigned index)
 {
     YGNodeSwapChild(m_node, child->m_node, index);
+}
+
+void Flexbox::swap_child(unsigned index1, unsigned index2)
+{
+    Flexbox *temp = get_child(index1);
+    replace_child_at(get_child(index2), index1);
+    replace_child_at(temp, index2);
+    
+    m_node->markDirtyAndPropogate();
 }
 
 unsigned Flexbox::get_child_count(void) const
@@ -577,6 +613,11 @@ void Flexbox::unset_dirtied_func(void)
     YGNodeSetDirtiedFunc(m_node, nullptr);
 }
 
+void Flexbox::mark_dirty_and_propogate(void)
+{
+    m_node->markDirtyAndPropogate();
+}
+
 void Flexbox::mark_dirty(void)
 {
     YGNodeMarkDirty(m_node);
@@ -668,7 +709,10 @@ void Flexbox::_bind_methods()
 
     ClassDB::bind_method(D_METHOD("insert_child"), &Flexbox::insert_child);
     ClassDB::bind_method(D_METHOD("remove_child"), &Flexbox::remove_child);
+    ClassDB::bind_method(D_METHOD("remove_child_at"), &Flexbox::remove_child_at);
     ClassDB::bind_method(D_METHOD("remove_all_children"), &Flexbox::remove_all_children);
+    ClassDB::bind_method(D_METHOD("replace_child"), &Flexbox::replace_child);
+    ClassDB::bind_method(D_METHOD("replace_child_at"), &Flexbox::replace_child_at);
     ClassDB::bind_method(D_METHOD("swap_child"), &Flexbox::swap_child);
     ClassDB::bind_method(D_METHOD("get_child_count"), &Flexbox::get_child_count);
     ClassDB::bind_method(D_METHOD("get_child"), &Flexbox::get_child);
@@ -677,6 +721,7 @@ void Flexbox::_bind_methods()
     ClassDB::bind_method(D_METHOD("unset_measure_func"), &Flexbox::unset_measure_func);
     ClassDB::bind_method(D_METHOD("set_dirtied_func"), &Flexbox::set_dirtied_func);
     ClassDB::bind_method(D_METHOD("unset_dirtied_func"), &Flexbox::unset_dirtied_func);
+    ClassDB::bind_method(D_METHOD("mark_dirty_and_propogate"), &Flexbox::mark_dirty_and_propogate);
     ClassDB::bind_method(D_METHOD("mark_dirty"), &Flexbox::mark_dirty);
     ClassDB::bind_method(D_METHOD("is_dirty"), &Flexbox::is_dirty);
 
