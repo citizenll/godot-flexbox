@@ -65,6 +65,7 @@ class EditorPropertyMargin extends EditorProperty:
 		var desc = ["T","R", "B", "L"]
 		for i in 4:
 			spin[i] = EditorSpinSlider.new()
+			spin[i].set_allow_greater(true)
 			spin[i].set_flat(true)
 			spin[i].set_label(desc[i])
 			bc.add_child(spin[i])
