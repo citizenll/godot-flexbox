@@ -23,9 +23,11 @@ const DEFAULT_VALUE = {
 	align_content = AlignContent.FlexStart
 }
 
-var _root
+var _root: Flexbox
 var _initialized = false
-var _flex_cache = {}
+
+var _flex_list = []
+enum FlexDataType { CID = 0, FLEXBOX, CONTROL }
 
 var direction_reverse = DEFAULT_VALUE.reverse
 @export var flex_direction:FlexDirection = DEFAULT_VALUE.flex_direction
@@ -68,64 +70,104 @@ func _notification(what: int) -> void:
 
 
 func _resort() -> void:
-	_draw_rects.clear()
-	var s = Time.get_ticks_usec()
 	var root_size = get_size()
 	_root.set_width(root_size.x)
 	_root.set_height(root_size.y)
+	
 	if debug_draw:
 		_draw_debug_rect(Rect2(Vector2.ZERO, root_size), Color(0, 0.8, 0.5, 1))
-	#
-	var childCount = get_child_count()
-	for i in range(childCount):
+	
+	var child_count = get_child_count()
+	var valid_child_index = 0
+	for i in range(child_count):
 		var c = get_child(i)
-		if c.is_set_as_top_level():
-			continue
-		if not c or not c.is_visible_in_tree():
-			continue
-
+		if not c.is_class("Control"): continue
+		if c.is_set_as_top_level(): continue
+		
 		var cid = c.get_instance_id()
-		var flexbox = _flex_cache.get(cid)
-		var size = c.custom_minimum_size
-		if not size:
-			size = c.size
-		if not flexbox:
+		var target_index = _find_index_from_flex_list(_flex_list, cid)
+		var flexbox: Flexbox
+		
+		if not c.is_visible_in_tree():
+			if target_index != -1:
+				# Remove invisible flexbox
+				_root.remove_child_at(target_index)
+				_flex_list.remove_at(target_index)
+#				print("Remove: ", target_index)
+			continue
+		
+		if target_index != -1:
+			# Replace flexbox
+			var old_flex_data = _flex_list[valid_child_index]
+			var new_flex_data = _flex_list[target_index]
+			flexbox = new_flex_data[FlexDataType.FLEXBOX]
+			
+			if old_flex_data[FlexDataType.CID] != cid:
+				_root.swap_child(valid_child_index, target_index)
+				_flex_list[target_index] = old_flex_data
+				_flex_list[valid_child_index] = new_flex_data
+#				print("Swap: ", target_index, " <-> ", valid_child_index)
+				
+		else:
+			# Add flexbox
 			flexbox = Flexbox.new()
-			_root.insert_child(flexbox, i)
-			_flex_cache[cid] = flexbox
-		#
-		flexbox.set_min_width(size.x)
-		flexbox.set_min_height(size.y)
-		#
+			_root.insert_child(flexbox, valid_child_index)
+			_flex_list.insert(valid_child_index, [cid, flexbox, c])
+#			print("Add: ", valid_child_index)
+			
+		_set_control_min_size(c, flexbox)
 		var flex_metas = c.get_meta("flex_metas", {})
 		if flex_metas.size():
 			apply_flex_meta(flexbox, flex_metas)
-	#
-	var calc = Time.get_ticks_usec()
+		
+		valid_child_index += 1
+	
+	child_count = valid_child_index
+	
+	# Remove unused flexbox
+	if child_count != _flex_list.size():
+		for i in range(_flex_list.size() - 1, child_count - 1, -1):
+			_root.remove_child_at(i)
+#			print("Remove: ", i)
+		_flex_list.resize(child_count)
+		_root.mark_dirty_and_propogate()
+	
+#	print("Count: ", _root.get_child_count())
+	
+	# Calculate layout
 	_root.calculate_layout(NAN, NAN, 1)
-	var calced = Time.get_ticks_usec()
-	#
-	for i in range(childCount):
-		var c = get_child(i)
-		if c.is_set_as_top_level():
-			continue
-		if not c or not c.is_visible_in_tree():
-			continue
-		#
-		var cid = c.get_instance_id()
-		var flexbox = _flex_cache[cid]
+	
+	# Adjust layout
+	for flex_data in _flex_list:
+		var flexbox = flex_data[FlexDataType.FLEXBOX]
+		var c = flex_data[FlexDataType.CONTROL]
+		
 		var offset = Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
 		var size = Vector2(flexbox.get_computed_width(), flexbox.get_computed_height())
-		
 		var rect = Rect2(offset, size)
+		_fit_child_in_rect(c, rect)
+		
 		if debug_draw:
 			_draw_debug_rect(rect, Color(1, 0, 0, 0.8))
-		fit_child_in_rect(c, rect)
-	var end = Time.get_ticks_usec()
+	
+	# Redraw component
 	queue_redraw()
 
 
-func fit_child_in_rect(child: Control, rect: Rect2) -> void:
+func _find_index_from_flex_list(flex_list: Array, cid: int) -> int:
+	for i in range(flex_list.size()):
+		if flex_list[i][FlexDataType.CID] == cid:
+			return i
+	return -1
+
+
+func _set_control_min_size(c: Control, flexbox: Flexbox):
+	var size = c.custom_minimum_size if c.custom_minimum_size else c.size
+	flexbox.set_min_width(size.x)
+	flexbox.set_min_height(size.y)
+
+
+func _fit_child_in_rect(child: Control, rect: Rect2) -> void:
 	var cid = child.get_instance_id()
 	child.set_position(rect.position)
 	child.set_size(rect.size)

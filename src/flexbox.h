@@ -115,8 +115,11 @@ public: // Style getters
 public: // Tree hierarchy mutators
     void insert_child(Flexbox *child, unsigned index);
     void remove_child(Flexbox *child);
+    void remove_child_at(unsigned index);
     void remove_all_children(void);
-    void swap_child(Flexbox *child, unsigned index);
+    void replace_child(Flexbox *child, Flexbox *target);
+    void replace_child_at(Flexbox *child, unsigned index);
+    void swap_child(unsigned index1, unsigned index2);
 
 public: // Tree hierarchy inspectors
     unsigned get_child_count(void) const;
@@ -159,6 +162,7 @@ public: // Dirtied func inspectors
     void call_dirtied_func(void);
 
 public: // Dirtiness accessors
+    void mark_dirty_and_propogate(void);
     void mark_dirty(void);
     bool is_dirty(void) const;
 
