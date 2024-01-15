@@ -19,6 +19,7 @@ func _enter_tree():
 	add_custom_type("FlexContainer", "Container", FlexContainer, Icon)
 	add_inspector_plugin(_inspector_plugin)
 	get_window().theme_changed.connect(_theme_changed)
+	_interface = get_editor_interface()
 	create_toolbar()
 
 

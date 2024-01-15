@@ -119,7 +119,8 @@ func _resort() -> void:
 		var flex_metas = c.get_meta("flex_metas", {})
 		if flex_metas.size():
 			apply_flex_meta(flexbox, flex_metas)
-		
+			if flex_metas.has("padding"):
+				padding_wrapper(c, flex_metas.get("padding"))
 		valid_child_index += 1
 	
 	child_count = valid_child_index
@@ -152,6 +153,19 @@ func _resort() -> void:
 	
 	# Redraw component
 	queue_redraw()
+
+
+func padding_wrapper(node:Control,spacing_value:Array):
+	if node.get_child_count()>0:
+		var children = node.get_children()
+		var wrapper_node = MarginContainer.new()
+		wrapper_node.add_theme_constant_override("margin_left", spacing_value[0])
+		wrapper_node.add_theme_constant_override("margin_top", spacing_value[1])
+		wrapper_node.add_theme_constant_override("margin_right", spacing_value[2])
+		wrapper_node.add_theme_constant_override("margin_bottom", spacing_value[3])
+		for child in children:
+			child.reparent(wrapper_node)
+		node.add_child(wrapper_node)
 
 
 func _find_index_from_flex_list(flex_list: Array, cid: int) -> int:

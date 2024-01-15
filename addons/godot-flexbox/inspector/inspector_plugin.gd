@@ -18,26 +18,37 @@ func _parse_begin(object):
 	grow.setup("Flex Grow", properties.get("grow", 0))
 	var shrink = EditorPropertyNumber.new()
 	shrink.setup("Flex Shrink", properties.get("shrink", 1))
-	var margin = EditorPropertyMargin.new()
+	var margin = EditorPropertySpacing.new("Margin")
 	margin.setup(properties.get("margin", [0,0,0,0]))
+	# var padding = EditorPropertySpacing.new("Padding")
+	# padding.setup(properties.get("padding", [0,0,0,0]))
 	#
 	var _on_change_handle = _property_value_changed.bind(object)
 	align_self.property_changed.connect(_on_change_handle)
 	grow.property_changed.connect(_on_change_handle)
 	shrink.property_changed.connect(_on_change_handle)
 	margin.property_changed.connect(_on_change_handle)
+	#padding.property_changed.connect(_on_change_handle)
 	#
 	add_property_editor("align_self", align_self)
 	add_property_editor("grow", grow)
 	add_property_editor("shrink", shrink)
-	add_property_editor("margin", margin)
+	add_property_editor("spacing/margin", margin)
+	#add_property_editor("spacing/padding", padding)
 
 
 func _property_value_changed(property, value, field, changing, object):
-	if property == "margin":
+	print("property change:-->", property, value, field, changing, object)
+	if property == "spacing/margin":
 		var margin = properties.get("margin", [0,0,0,0])
 		margin[field.to_int()] = value
 		value = margin
+		property = 'margin'
+	elif property == "spacing/padding":
+		var padding = properties.get("padding", [0,0,0,0])
+		padding[field.to_int()] = value
+		value = padding
+		property = 'padding'
 	
 	properties[property] = value
 	object.set_meta("flex_metas", properties)
@@ -46,7 +57,7 @@ func _property_value_changed(property, value, field, changing, object):
 		parent.call("update_layout")
 
 
-class EditorPropertyMargin extends EditorProperty:
+class EditorPropertySpacing extends EditorProperty:
 	var spin := []
 	var linked:TextureButton
 
@@ -55,8 +66,9 @@ class EditorPropertyMargin extends EditorProperty:
 	var bottom = 0
 	var left = 0
 
-	func _init():
-		label = "Margin"
+	func _init(spacing):
+		label = spacing
+		
 		spin.resize(4)
 		var bc = VBoxContainer.new()
 		bc.set_h_size_flags(SIZE_EXPAND_FILL)
