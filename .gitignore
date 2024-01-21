@@ -62,7 +62,7 @@ vsproj/x86/
 vsproj/gdsqlite.vcxproj.*
 
 .vscode
-demo/addons
+demo/addons/godot-flexbox
 dist
 bin
 addons/*.dll

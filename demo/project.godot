@@ -11,14 +11,13 @@ config_version=5
 [application]
 
 config/name="Flexbox"
-run/main_scene="res://demo/FlexDemo.tscn"
-config/features=PackedStringArray("4.1")
+config/features=PackedStringArray("4.2")
 boot_splash/bg_color=Color(0.141176, 0.141176, 0.141176, 1)
 config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-flexbox/plugin.cfg")
+enabled=PackedStringArray("res://addons/addons-link/plugin.cfg")
 
 [gui]
 
