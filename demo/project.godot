@@ -17,7 +17,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/addons-link/plugin.cfg")
+enabled=PackedStringArray("res://addons/addons-link/plugin.cfg", "res://addons/godot-flexbox/plugin.cfg")
 
 [gui]
 

@@ -66,3 +66,4 @@ demo/addons/godot-flexbox
 dist
 bin
 addons/*.dll
+demo/.godot
