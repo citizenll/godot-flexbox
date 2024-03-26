@@ -1,15 +1,27 @@
 extends EditorInspectorPlugin
 
 var properties = {}
+var has_script = false
+var script_index = -1
 
 func _can_handle(object: Object) -> bool:
+	script_index = -1
 	if not object is Control:
 		return false
 	var parent = object.get_parent()
-	return parent is FlexContainer
+	var passed = parent is FlexContainer
+	if passed:
+		var property_list = object.get_property_list().map(func(item):return item.name)
+		var scripts = property_list.filter(func(name):return name.match("*.gd"))
+		has_script = scripts.size() > 0
+	return passed
 
-
-func _parse_begin(object):
+func _parse_category(object, category):
+	## make flex property below the scrip
+	if has_script: script_index += 1
+	else: script_index = 1
+	if script_index != 1 : return
+	
 	properties = object.get_meta("flex_metas", {})
 
 	var align_self = EditorPropertyEnum.new()

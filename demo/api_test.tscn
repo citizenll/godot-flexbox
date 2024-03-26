@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3ooljt4sjxsd"]
+[gd_scene load_steps=4 format=3 uid="uid://b3ooljt4sjxsd"]
 
 [ext_resource type="Script" path="res://api_test.gd" id="1_0rrja"]
 [ext_resource type="Script" path="res://addons/godot-flexbox/flex_container.gd" id="2_51528"]
+[ext_resource type="Script" path="res://ColorRect1.gd" id="3_tnhjb"]
 
 [node name="root" type="Control"]
 layout_mode = 3
@@ -27,6 +28,7 @@ metadata/_flex_metas = {
 [node name="ColorRect1" type="ColorRect" parent="ChilContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+script = ExtResource("3_tnhjb")
 metadata/flex_metas = {
 "align_self": 1
 }
