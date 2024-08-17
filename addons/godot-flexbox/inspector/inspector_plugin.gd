@@ -19,9 +19,8 @@ func _can_handle(object: Object) -> bool:
 func _parse_category(object, category):
 	## make flex property below the scrip
 	if has_script: script_index += 1
-	else: script_index = 1
+	else: script_index+=2
 	if script_index != 1 : return
-	
 	properties = object.get_meta("flex_metas", {})
 
 	var align_self = EditorPropertyEnum.new()
@@ -50,7 +49,6 @@ func _parse_category(object, category):
 
 
 func _property_value_changed(property, value, field, changing, object):
-	print("property change:-->", property, value, field, changing, object)
 	if property == "spacing/margin":
 		var margin = properties.get("margin", [0,0,0,0])
 		margin[field.to_int()] = value

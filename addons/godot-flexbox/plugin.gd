@@ -16,11 +16,15 @@ var _interface
 func _enter_tree():
 	IconAssets.generate_icons(is_dark_theme())
 	_inspector_plugin = InspectorPlugin.new()
-	add_custom_type("FlexContainer", "Container", FlexContainer, Icon)
+	var	EDSCALE = get_editor_interface().get_editor_scale()
+	var image = Icon.get_image()
+	image.resize(20*EDSCALE, 20*EDSCALE,Image.INTERPOLATE_NEAREST)
+	var icon = ImageTexture.new().create_from_image(image)
+	add_custom_type("FlexContainer", "Container", FlexContainer, icon)
 	add_inspector_plugin(_inspector_plugin)
 	get_window().theme_changed.connect(_theme_changed)
 	_interface = get_editor_interface()
-	create_toolbar()
+	create_toolbar(EDSCALE)
 
 
 func _exit_tree():
@@ -31,8 +35,8 @@ func _exit_tree():
 	_toolbar = null
 
 
-func create_toolbar():
-	_toolbar = EditorToolbar.new()
+func create_toolbar(EDSCALE):
+	_toolbar = EditorToolbar.new(EDSCALE)
 	_toolbar.plugin = self
 	_toolbar.undo_redo = get_undo_redo()
 	_toolbar.hide()

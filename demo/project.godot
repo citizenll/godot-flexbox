@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Flexbox"
-config/features=PackedStringArray("4.2")
+config/features=PackedStringArray("4.3")
 boot_splash/bg_color=Color(0.141176, 0.141176, 0.141176, 1)
 config/icon="res://icon.png"
 

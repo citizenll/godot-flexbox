@@ -30,29 +30,27 @@ var _current_node:FlexContainer
 var _selection:EditorSelection
 var undo_redo:EditorUndoRedoManager
 var flex_picker:FlexPresetPicker
+var EDSCALE = 1
 
-
-func _init():
-	add_child(VSeparator.new())
-
-	presets_button = EditorPopupButton.new()
+func _init(p_editor_scale):
+	EDSCALE = p_editor_scale
+	presets_button = EditorPopupButton.new(EDSCALE)
 	presets_button.set_tooltip_text("Presets for the direction values  of a Flexbox node.")
 	add_child(presets_button)
 	#
-	add_child(Space.new(12))
-	
 	var presets_label = Label.new()
 	presets_label.text = "Flexbox Presets"
 	presets_button.get_popup_hbox().add_child(presets_label)
-	flex_picker = FlexPresetPicker.new()
-	flex_picker.set_h_size_flags(SIZE_SHRINK_CENTER);
-	presets_button.get_popup_hbox().add_child(flex_picker)
-	flex_picker.flexbox_preset_selected.connect(_flexbox_preset_selected)
 	#set default direction
 	presets["flex_direction"] = 2
 
 
 func _ready():
+	flex_picker = FlexPresetPicker.new(EDSCALE)
+	flex_picker.set_h_size_flags(SIZE_SHRINK_CENTER);
+	presets_button.get_popup_hbox().add_child(flex_picker)
+	flex_picker.flexbox_preset_selected.connect(_flexbox_preset_selected)
+	
 	_selection = plugin.get_editor_interface().get_selection()
 	_selection.selection_changed.connect(_selection_changed)
 	_selection_changed()
@@ -102,18 +100,22 @@ func _flexbox_preset_selected(p_category, p_preset, p_state):
 func _notification(what):
 	match what: 
 		NOTIFICATION_ENTER_TREE, NOTIFICATION_THEME_CHANGED:
-			presets_button.icon = Icon
-
+			pass
 
 class EditorPopupButton extends Button:
 	var arrow_icon:Texture2D
 	var popup_panel:PopupPanel
 	var popup_vbox:VBoxContainer
 	
-	func _init():
+	func _init(EDSCALE):
 		flat = true
 		toggle_mode = true
 		focus_mode = Control.FOCUS_NONE
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var image = Icon.get_image()
+		image.resize(image.get_width(), image.get_width(),Image.INTERPOLATE_NEAREST)
+		var resize_icon = ImageTexture.new().create_from_image(image)
+		icon = resize_icon
 
 		popup_panel = PopupPanel.new()
 		popup_panel.theme_type_variation = "ControlEditorPopupPanel"
@@ -140,12 +142,14 @@ class EditorPopupButton extends Button:
 	func _notification(what):
 		match what:
 			NOTIFICATION_ENTER_TREE, NOTIFICATION_THEME_CHANGED:
-				arrow_icon = get_theme_icon("select_arrow", "Tree");
+				#arrow_icon = get_theme_icon("select_arrow", "Tree");
+				pass
 			NOTIFICATION_DRAW:
-				if is_instance_valid(arrow_icon):
-					var arrow_pos = Vector2(26,0)
-					arrow_pos.y = get_size().y / 2 - arrow_icon.get_height() / 2;
-					draw_texture(arrow_icon, arrow_pos);
+				pass
+				#if is_instance_valid(arrow_icon):
+					#var arrow_pos = Vector2(26,0)
+					#arrow_pos.y = get_size().y / 2 - arrow_icon.get_height() / 2;
+					#draw_texture(arrow_icon, arrow_pos);
 			NOTIFICATION_VISIBILITY_CHANGED:
 				if is_visible_in_tree():
 					popup_panel.hide()
@@ -165,6 +169,10 @@ class Space extends Control:
 class EditorPresetPicker extends MarginContainer:
 	var grid_separation = 0
 	var preset_buttons = {}
+	var EDSCALE = 1
+	var BASE_SIZE = Vector2(32,32)
+	func _init(scale):
+		EDSCALE = scale
 	
 	func _add_button(p_category, p_preset, b):
 		if preset_buttons.get(p_category) == null:
@@ -176,10 +184,13 @@ class EditorPresetPicker extends MarginContainer:
 		var b = Button.new()
 		b.auto_translate = false
 		b.toggle_mode = true
-		b.set_custom_minimum_size(Vector2(36, 36))
+		b.set_custom_minimum_size(BASE_SIZE * EDSCALE)
+		b.set_size(BASE_SIZE * EDSCALE)
 		b.set_icon_alignment(HORIZONTAL_ALIGNMENT_CENTER)
 		b.set_tooltip_text(p_name)
 		b.set_flat(true)
+		b.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		b.expand_icon = true
 		p_row.add_child(b)
 		b.pressed.connect(_preset_button_pressed.bind(p_category, p_preset))
 		_add_button(p_category, p_preset, b)
@@ -189,7 +200,8 @@ class EditorPresetPicker extends MarginContainer:
 		var b = Button.new()
 		b.toggle_mode = true
 		b.set("theme_override_font_sizes/font_size",12)
-		b.set_custom_minimum_size(Vector2(36, 36))
+		b.set_custom_minimum_size(BASE_SIZE * EDSCALE)
+		b.set_size(BASE_SIZE * EDSCALE)
 		b.set_text(p_name)
 		p_row.add_child(b)
 		b.pressed.connect(_preset_button_pressed.bind(p_category, p_preset))
@@ -207,7 +219,6 @@ class EditorPresetPicker extends MarginContainer:
 
 class FlexPresetPicker extends EditorPresetPicker:
 	signal flexbox_preset_selected
-
 	var state:Dictionary
 
 	const Category = {
@@ -220,8 +231,8 @@ class FlexPresetPicker extends EditorPresetPicker:
 	}
 
 	const LABEL_WIDTH = 70
-
-	func _init():
+	func _init(scale):
+		EDSCALE = scale
 		var main_vb = VBoxContainer.new()
 		main_vb.add_theme_constant_override("separation", grid_separation)
 		add_child(main_vb)
