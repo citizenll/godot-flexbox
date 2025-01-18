@@ -220,3 +220,77 @@ jobs:
           cd cmake-build
           cmake ../ -DGODOT_ENABLE_TESTING=YES
           cmake --build . --verbose -t godot-cpp.test.template_release --config Release
+  
+  publish-release:
+    name: 🚀 Publish Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+          pattern: '*/*'
+          merge-multiple: true
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+      - name: Upload Linux x86_64 Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/flexbox.linux.template_release.x86_64.a
+          asset_name: flexbox-linux-x86_64.a
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/flexbox.windows.template_release.x86_64.lib
+          asset_name: flexbox-windows-x86_64.lib
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS Universal Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/flexbox.macos.template_release.universal.a
+          asset_name: flexbox-macos-universal.a
+          asset_content_type: application/octet-stream
+
+      - name: Upload Android ARM64 Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/flexbox.android.template_release.arm64.a
+          asset_name: flexbox-android-arm64.a
+          asset_content_type: application/octet-stream
+
+      - name: Upload iOS ARM64 Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/flexbox.ios.template_release.arm64.a
+          asset_name: flexbox-ios-arm64.a
+          asset_content_type: application/octet-stream
+
+      - name: Upload Web WASM Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/flexbox.web.template_release.wasm32.a
+          asset_name: flexbox-web-wasm32.a
+          asset_content_type: application/octet-stream
