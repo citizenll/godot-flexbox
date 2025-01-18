@@ -8,10 +8,10 @@ concurrency:
 jobs:
   # First stage: Only static checks, fast and prevent expensive builds from running.
 
-  # static-checks:
-  #   if: '!vars.DISABLE_GODOT_CI'
-  #   name: 📊 Static Checks
-  #   uses: ./.github/workflows/static_checks.yml
+  static-checks:
+    if: '!vars.DISABLE_GODOT_CI'
+    name: 📊 Static Checks
+    uses: ./.github/workflows/static_checks.yml
 
   # Second stage: Run all the builds and some of the tests.
 
