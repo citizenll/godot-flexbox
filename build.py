@@ -6,6 +6,19 @@ import multiprocessing
 
 script_path = os.path.abspath(__file__)
 
+def run_cmd(command):
+    print(command)
+    subprocess.run(command, shell = True, check = True)
+
+def copy_first_existing(source_candidates, target_file):
+    os.makedirs(os.path.dirname(target_file), exist_ok = True)
+    for source_file in source_candidates:
+        if os.path.exists(source_file):
+            shutil.copy2(source_file, target_file)
+            print("Copied:", source_file, "->", target_file)
+            return
+    raise FileNotFoundError("No build output found. Checked: {}".format(source_candidates))
+
 def replace_word(file_name, target_str, replace_str):
     text = ""
     with open(file_name, "r") as file:
@@ -72,13 +85,16 @@ elif "platform=ios" in sys.argv:
     shutil.copy2("bin/libgdflexbox.dylib", "addons/godot-flexbox/bin/ios/")
 
 elif "platform=linux" in sys.argv:
-    subprocess.run("scons platform=linux bits=32 target=release use_llvm=1" + job_opt, shell = True)
-    subprocess.run("scons platform=linux bits=64 target=release use_llvm=1" + job_opt, shell = True)
-
-    os.makedirs("addons/godot-flexbox/bin/linux", exist_ok = True)
-
-    shutil.copy2("bin/libgdflexbox.x86_32.so", "addons/godot-flexbox/bin/linux/")
-    shutil.copy2("bin/libgdflexbox.x86_64.so", "addons/godot-flexbox/bin/linux/")
+    run_cmd("scons platform=linux arch=x86_64 precision=double target=template_release" + job_opt)
+    copy_first_existing(
+        [
+            "bin/linux/libgodot-flexbox.linux.template_release.double.x86_64.so",
+            "godot-flexbox/bin/linux/libgodot-flexbox.linux.template_release.double.x86_64.so",
+            "bin/libgodot-flexbox.linux.template_release.double.x86_64.so",
+            "bin/libgdflexbox.x86_64.so"
+        ],
+        "addons/godot-flexbox/bin/linux/libgodot-flexbox.linux.template_release.double.x86_64.so"
+    )
 
 elif "platform=web" in sys.argv:
     subprocess.run("scons platform=web bits=32 target=release" + job_opt, shell = True)

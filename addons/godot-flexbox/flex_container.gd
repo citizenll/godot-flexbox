@@ -23,7 +23,7 @@ const DEFAULT_VALUE = {
 	align_content = AlignContent.FlexStart
 }
 
-var _root: Flexbox
+var _root
 var _initialized = false
 
 var _flex_list = []
@@ -35,12 +35,30 @@ var direction_reverse = DEFAULT_VALUE.reverse
 @export var justify_content:JustifyContent = DEFAULT_VALUE.justify_content
 @export var align_items:AlignItems = DEFAULT_VALUE.align_items
 @export var align_content:AlignContent = DEFAULT_VALUE.align_content
+var _container_margin: Array = [0.0, 0.0, 0.0, 0.0]
+var _container_padding: Array = [0.0, 0.0, 0.0, 0.0]
+
+# [top, right, bottom, left]
+@export var container_margin: Array:
+	get:
+		return _container_margin
+	set(value):
+		_container_margin = _normalize_spacing_array(value)
+		update_layout()
+@export var container_padding: Array:
+	get:
+		return _container_padding
+	set(value):
+		_container_padding = _normalize_spacing_array(value)
+		update_layout()
 
 
 var state:Dictionary = {flex_direction=null, flex_wrap=null,justify_content=null,align_items=null,align_content=null}
 
 func _init():
-	_root = Flexbox.new()
+	_root = ClassDB.instantiate("Flexbox")
+	if _root == null:
+		push_warning("Flexbox GDExtension is unavailable. FlexContainer layout is disabled.")
 	update_state()
 
 
@@ -51,6 +69,8 @@ func update_state():
 
 
 func _ready() -> void:
+	if _root == null:
+		return
 	_root.set_flex_direction(get("flex_direction"))
 	_root.set_flex_wrap(get("flex_wrap"))
 	_root.set_justify_content(get("justify_content"))
@@ -64,18 +84,23 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	match what:
 		NOTIFICATION_SORT_CHILDREN:
-			_resort()
+			if _root != null:
+				_resort()
 		[NOTIFICATION_TRANSLATION_CHANGED, NOTIFICATION_LAYOUT_DIRECTION_CHANGED]:
 			queue_sort()
 
 
 func _resort() -> void:
+	if _root == null:
+		return
 	var root_size = get_size()
-	_root.set_width(root_size.x)
-	_root.set_height(root_size.y)
+	var content_rect = _get_layout_content_rect(root_size)
+	_root.set_width(content_rect.size.x)
+	_root.set_height(content_rect.size.y)
 	
 	if debug_draw:
 		_draw_debug_rect(Rect2(Vector2.ZERO, root_size), Color(0, 0.8, 0.5, 1))
+		_draw_debug_rect(content_rect, Color(0.2, 0.4, 1.0, 1))
 	
 	var child_count = get_child_count()
 	var valid_child_index = 0
@@ -86,7 +111,7 @@ func _resort() -> void:
 		
 		var cid = c.get_instance_id()
 		var target_index = _find_index_from_flex_list(_flex_list, cid)
-		var flexbox: Flexbox
+		var flexbox
 		
 		if not c.is_visible_in_tree():
 			if target_index != -1:
@@ -110,7 +135,10 @@ func _resort() -> void:
 				
 		else:
 			# Add flexbox
-			flexbox = Flexbox.new()
+			flexbox = ClassDB.instantiate("Flexbox")
+			if flexbox == null:
+				push_warning("Failed to create Flexbox node. Check GDExtension binaries.")
+				continue
 			_root.insert_child(flexbox, valid_child_index)
 			_flex_list.insert(valid_child_index, [cid, flexbox, c])
 #			print("Add: ", valid_child_index)
@@ -143,7 +171,7 @@ func _resort() -> void:
 		var flexbox = flex_data[FlexDataType.FLEXBOX]
 		var c = flex_data[FlexDataType.CONTROL]
 		
-		var offset = Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
+		var offset = content_rect.position + Vector2(flexbox.get_computed_left(), flexbox.get_computed_top())
 		var size = Vector2(flexbox.get_computed_width(), flexbox.get_computed_height())
 		var rect = Rect2(offset, size)
 		_fit_child_in_rect(c, rect)
@@ -155,17 +183,31 @@ func _resort() -> void:
 	queue_redraw()
 
 
-func padding_wrapper(node:Control,spacing_value:Array):
-	if node.get_child_count()>0:
-		var children = node.get_children()
-		var wrapper_node = MarginContainer.new()
-		wrapper_node.add_theme_constant_override("margin_left", spacing_value[0])
-		wrapper_node.add_theme_constant_override("margin_top", spacing_value[1])
-		wrapper_node.add_theme_constant_override("margin_right", spacing_value[2])
-		wrapper_node.add_theme_constant_override("margin_bottom", spacing_value[3])
-		for child in children:
-			child.reparent(wrapper_node)
+func padding_wrapper(node: Control, spacing_value: Array):
+	if node.get_child_count() <= 0:
+		return
+	var wrapper_node: MarginContainer = null
+	for child in node.get_children():
+		if child is MarginContainer and child.get_meta("_flex_padding_wrapper", false):
+			wrapper_node = child
+			break
+	if wrapper_node == null:
+		wrapper_node = MarginContainer.new()
+		wrapper_node.set_meta("_flex_padding_wrapper", true)
+		wrapper_node.name = "__flex_padding_wrapper"
+		wrapper_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrapper_node.anchor_right = 1.0
+		wrapper_node.anchor_bottom = 1.0
 		node.add_child(wrapper_node)
+		for child in node.get_children():
+			if child == wrapper_node:
+				continue
+			child.reparent(wrapper_node)
+	var spacing = _normalize_spacing_array(spacing_value)
+	wrapper_node.add_theme_constant_override("margin_top", spacing[0])
+	wrapper_node.add_theme_constant_override("margin_right", spacing[1])
+	wrapper_node.add_theme_constant_override("margin_bottom", spacing[2])
+	wrapper_node.add_theme_constant_override("margin_left", spacing[3])
 
 
 func _find_index_from_flex_list(flex_list: Array, cid: int) -> int:
@@ -175,16 +217,19 @@ func _find_index_from_flex_list(flex_list: Array, cid: int) -> int:
 	return -1
 
 
-func _set_control_min_size(c: Control, flexbox: Flexbox):
-	var size = c.custom_minimum_size if c.custom_minimum_size else c.size
-	flexbox.set_min_width(size.x)
-	flexbox.set_min_height(size.y)
+func _set_control_min_size(c: Control, flexbox):
+	var size = c.get_combined_minimum_size()
+	if size == Vector2.ZERO:
+		size = c.custom_minimum_size
+	if size == Vector2.ZERO:
+		size = c.size
+	flexbox.set_min_width(maxf(size.x, 0.0))
+	flexbox.set_min_height(maxf(size.y, 0.0))
 
 
 func _fit_child_in_rect(child: Control, rect: Rect2) -> void:
-	var cid = child.get_instance_id()
 	child.set_position(rect.position)
-	child.set_size(rect.size)
+	child.set_size(Vector2(maxf(rect.size.x, 0.0), maxf(rect.size.y, 0.0)))
 	child.set_rotation(0)
 	child.set_scale(Vector2.ONE)
 
@@ -204,6 +249,8 @@ func apply_child_property(node, prop, value):
 				node.set_flex_basis(value)
 		"grow":
 			node.set_flex_grow(value)
+		"shrink":
+			node.set_flex_shrink(value)
 		"padding":
 			for i in range(4):
 				var edge = EDGES[i]
@@ -224,6 +271,8 @@ func flex_property_changed(property, value):
 	value = process_value(property, value)
 	state[property] = value
 	set(property, value)
+	if _root == null:
+		return
 	match property:
 		"flex_direction":
 			_root.set_flex_direction(value)
@@ -265,6 +314,29 @@ func process_value(key, value):
 	if DEFAULT_VALUE.has(key) && value == -1:
 		return DEFAULT_VALUE[key]
 	return value
+
+
+func _normalize_spacing_array(value: Array) -> Array:
+	var result = [0.0, 0.0, 0.0, 0.0]
+	for i in range(min(value.size(), 4)):
+		var item = value[i]
+		if typeof(item) == TYPE_FLOAT or typeof(item) == TYPE_INT:
+			result[i] = float(item)
+	return result
+
+
+func _get_layout_content_rect(root_size: Vector2) -> Rect2:
+	var margin = _container_margin
+	var padding = _container_padding
+	var inset_top = margin[0] + padding[0]
+	var inset_right = margin[1] + padding[1]
+	var inset_bottom = margin[2] + padding[2]
+	var inset_left = margin[3] + padding[3]
+	var content_size = Vector2(
+		maxf(root_size.x - inset_left - inset_right, 0.0),
+		maxf(root_size.y - inset_top - inset_bottom, 0.0)
+	)
+	return Rect2(Vector2(inset_left, inset_top), content_size)
 
 
 func get_class():
